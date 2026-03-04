@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:n_leaks/core/widgets/named_text_field.dart';
 import 'package:n_leaks/features/auth/widgets/social_buttons.dart';
 
@@ -18,64 +19,91 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              Text('Login'),
-              Text('Login to access your travel wise account'),
-              NamedTextField(name: 'Email', controller: _emailController),
-              NamedTextField(
-                name: 'Password',
-                controller: _passController,
-                visibilityButton: true,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Checkbox(
-                    value: _rememberUser,
-                    onChanged: (value) {
-                      setState(() => _rememberUser = value);
-                    },
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Align(
+                  alignment: AlignmentGeometry.centerLeft,
+                  child: Text(
+                    'Login',
+                    style: Theme.of(context).textTheme.displayMedium,
                   ),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      'Forgot Password',
-                      style: TextStyle(decoration: TextDecoration.underline),
+                ),
+                SizedBox(height: 16.h),
+                Align(
+                  alignment: AlignmentGeometry.centerLeft,
+                  child: Text(
+                    'Login to access your travel wise account',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
+                SizedBox(height: 35.h),
+                NamedTextField(
+                  name: 'Email',
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                SizedBox(height: 24.h),
+                NamedTextField(
+                  name: 'Password',
+                  controller: _passController,
+                  visibilityButton: true,
+                  keyboardType: TextInputType.visiblePassword,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Checkbox(
+                          value: _rememberUser,
+                          onChanged: (value) {
+                            setState(() => _rememberUser = value);
+                          },
+                        ),
+                        Text('Remember me'),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // Perform login action
-                    print('Success!\nEmail: ${_emailController.text}');
-                    print('Password: ${_passController.text}');
-                  }
-                },
-                child: Text('Login'),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Don't have and account?"),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      'Sign up',
-                      style: TextStyle(decoration: TextDecoration.underline),
+                    TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        'Forgot Password',
+                        style: TextStyle(decoration: TextDecoration.underline),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              Text('Or login with'),
-              SocialButtons(),
-            ],
+                  ],
+                ),
+                FloatingActionButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      // Perform login action
+                      print('Success!\nEmail: ${_emailController.text}');
+                      print('Password: ${_passController.text}');
+                    }
+                  },
+                  child: Text('Login'),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Don't have and account?"),
+                    TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        'Sign up',
+                        style: TextStyle(decoration: TextDecoration.underline),
+                      ),
+                    ),
+                  ],
+                ),
+                Text('Or login with'),
+                SocialButtons(),
+              ],
+            ),
           ),
         ),
       ),
