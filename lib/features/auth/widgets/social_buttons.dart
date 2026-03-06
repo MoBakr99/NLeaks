@@ -5,7 +5,11 @@ import 'package:flutter_svg/svg.dart';
 class SocialButtons extends StatelessWidget {
   const SocialButtons({
     super.key,
-    required this.assets,
+    this.assets = const [
+      'assets/images/svgs/google_logo.svg',
+      'assets/images/svgs/facebook_logo.svg',
+      'assets/images/svgs/apple_logo.svg',
+    ],
     required this.onPressed,
   });
 

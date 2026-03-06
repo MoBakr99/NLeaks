@@ -20,137 +20,143 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passController = TextEditingController();
 
   @override
+  void dispose() {
+    super.dispose();
+    _emailController.dispose();
+    _passController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                Align(
-                  alignment: AlignmentGeometry.centerLeft,
-                  child: Text(
-                    'Login',
-                    style: Theme.of(context).textTheme.displayMedium,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Align(
+                    alignment: AlignmentGeometry.centerLeft,
+                    child: Text(
+                      'Login',
+                      style: Theme.of(context).textTheme.displayMedium,
+                    ),
                   ),
-                ),
-                SizedBox(height: 16.h),
-                Align(
-                  alignment: AlignmentGeometry.centerLeft,
-                  child: Text(
-                    'Login to access your travel wise account',
-                    style: Theme.of(context).textTheme.bodyMedium,
+                  SizedBox(height: 16.h),
+                  Align(
+                    alignment: AlignmentGeometry.centerLeft,
+                    child: Text(
+                      'Login to access your travel wise account',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
                   ),
-                ),
-                SizedBox(height: 35.h),
-                NamedTextField(
-                  name: 'Email',
-                  hintText: 'Enter your email',
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                SizedBox(height: 24.h),
-                NamedTextField(
-                  name: 'Password',
-                  hintText: 'Enter your password',
-                  controller: _passController,
-                  visibilityButton: true,
-                  keyboardType: TextInputType.visiblePassword,
-                ),
-                SizedBox(height: 16.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Checkbox(
-                          value: _rememberUser,
-                          side: BorderSide(
-                            width: 2.sp,
-                            color: Theme.of(context).colorScheme.tertiary,
+                  SizedBox(height: 35.h),
+                  NamedTextField(
+                    name: 'Email',
+                    hintText: 'Enter your email',
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  SizedBox(height: 24.h),
+                  NamedTextField(
+                    name: 'Password',
+                    hintText: 'Enter your password',
+                    controller: _passController,
+                    visibilityButton: true,
+                    keyboardType: TextInputType.visiblePassword,
+                  ),
+                  SizedBox(height: 16.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Checkbox(
+                            value: _rememberUser,
+                            side: BorderSide(
+                              width: 2.sp,
+                              color: Theme.of(context).colorScheme.tertiary,
+                            ),
+                            onChanged: (value) {
+                              setState(() => _rememberUser = value);
+                            },
                           ),
-                          onChanged: (value) {
-                            setState(() => _rememberUser = value);
-                          },
-                        ),
-                        Text('Remember me'),
-                      ],
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        'Forgot Password',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          decoration: TextDecoration.underline,
-                          decorationColor: Theme.of(
-                            context,
-                          ).colorScheme.primary,
+                          Text('Remember me'),
+                        ],
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, forgotPassRoute);
+                        },
+                        child: Text(
+                          'Forgot Password',
+                          style: Theme.of(context).textTheme.bodyMedium!
+                              .copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                                decoration: TextDecoration.underline,
+                                decorationColor: Theme.of(
+                                  context,
+                                ).colorScheme.primary,
+                              ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 32.h),
-                AppButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // Perform login action
-                      print('Success!\nEmail: ${_emailController.text}');
-                      print('Password: ${_passController.text}');
-                    }
-                  },
-                  text: 'Login',
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Don't have an account?",
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(context, signupRoute);
-                      },
-                      child: Text(
-                        'Sign up',
-                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          decoration: TextDecoration.underline,
-                          decorationColor: Theme.of(
-                            context,
-                          ).colorScheme.primary,
+                    ],
+                  ),
+                  SizedBox(height: 32.h),
+                  AppButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        // Perform login action
+                        print('Success!\nEmail: ${_emailController.text}');
+                        print('Password: ${_passController.text}');
+                      }
+                    },
+                    text: 'Login',
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Don't have an account?",
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(context, signupRoute);
+                        },
+                        child: Text(
+                          'Sign up',
+                          style: Theme.of(context).textTheme.bodySmall!
+                              .copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                                decoration: TextDecoration.underline,
+                                decorationColor: Theme.of(
+                                  context,
+                                ).colorScheme.primary,
+                              ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 32.h),
-                OrDivider(login: true),
-                SizedBox(height: 16.h),
-                SocialButtons(
-                  assets: <String>[
-                    'assets/images/svgs/facebook_logo.svg',
-                    'assets/images/svgs/google_logo.svg',
-                    'assets/images/svgs/apple_logo.svg',
-                  ],
-                  onPressed: <void Function()>[() {}, () {}, () {}],
-                ),
-              ],
+                    ],
+                  ),
+                  SizedBox(height: 32.h),
+                  OrDivider(login: true),
+                  SizedBox(height: 16.h),
+                  SocialButtons(
+                    assets: <String>[
+                      'assets/images/svgs/facebook_logo.svg',
+                      'assets/images/svgs/google_logo.svg',
+                      'assets/images/svgs/apple_logo.svg',
+                    ],
+                    onPressed: <void Function()>[() {}, () {}, () {}],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _emailController.dispose();
-    _passController.dispose();
   }
 }

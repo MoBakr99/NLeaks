@@ -24,6 +24,17 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _confirmPassController = TextEditingController();
 
   @override
+  void dispose() {
+    super.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _passController.dispose();
+    _confirmPassController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -123,11 +134,16 @@ class _SignupPageState extends State<SignupPage> {
                       Row(
                         children: [
                           Text(
-                            'I agree to all the',
+                            'I agree to all the ',
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                           TextButton(
                             onPressed: () {},
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              minimumSize: Size(0, 0),
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
                             child: Text(
                               'Terms',
                               style: Theme.of(context).textTheme.bodySmall!
@@ -143,11 +159,16 @@ class _SignupPageState extends State<SignupPage> {
                             ),
                           ),
                           Text(
-                            'and',
+                            ' and ',
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                           TextButton(
                             onPressed: () {},
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              minimumSize: Size(0, 0),
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
                             child: Text(
                               'Privacy Policy',
                               style: Theme.of(context).textTheme.bodySmall!
@@ -219,16 +240,5 @@ class _SignupPageState extends State<SignupPage> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _firstNameController.dispose();
-    _lastNameController.dispose();
-    _emailController.dispose();
-    _phoneController.dispose();
-    _passController.dispose();
-    _confirmPassController.dispose();
   }
 }

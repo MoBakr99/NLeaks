@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:n_leaks/core/constants/app_routes.dart';
 import 'package:n_leaks/core/themes/theme.dart';
-import 'package:n_leaks/features/auth/login_page.dart';
+import 'package:n_leaks/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: appTheme,
           routes: appRoutes,
-          home: const LoginPage(),
+          home: const SplashScreen(),
         ),
     );
   }
