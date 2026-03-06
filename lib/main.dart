@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:n_leaks/core/constants/app_routes.dart';
 import 'package:n_leaks/core/themes/theme.dart';
 import 'package:n_leaks/features/auth/login_page.dart';
 
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
           title: 'Flutter Demo',
           debugShowCheckedModeBanner: false,
           theme: appTheme,
+          routes: appRoutes,
           home: const LoginPage(),
         ),
     );

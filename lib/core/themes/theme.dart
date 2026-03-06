@@ -22,6 +22,11 @@ ThemeData get appTheme => ThemeData(
       fontSize: 20.sp,
       fontWeight: FontWeight.w500,
     ),
+    titleSmall: GoogleFonts.inter(
+      color: lightGrayColor,
+      fontSize: 18.sp,
+      fontWeight: FontWeight.w500,
+    ),
     bodyMedium: GoogleFonts.inter(
       color: lightGrayColor,
       fontSize: 16.sp,
@@ -31,6 +36,11 @@ ThemeData get appTheme => ThemeData(
       color: lightGrayColor,
       fontSize: 14.sp,
       fontWeight: FontWeight.w400,
+    ),
+    labelMedium: GoogleFonts.inter(
+      color: backgroundColor,
+      fontSize: 12.sp,
+      fontWeight: FontWeight.w500,
     ),
   ),
 );

@@ -44,7 +44,9 @@ class _NamedTextFieldState extends State<NamedTextField> {
           style: Theme.of(context).textTheme.bodySmall,
           decoration: InputDecoration(
             hintText: widget.hintText,
-            hintStyle: Theme.of(context).textTheme.bodyMedium,
+            hintStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
+              color: Theme.of(context).colorScheme.primary.withAlpha(180),
+            ),
             filled: true,
             fillColor: Theme.of(context).colorScheme.secondary,
             enabledBorder: OutlineInputBorder(
