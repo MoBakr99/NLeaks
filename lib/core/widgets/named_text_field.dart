@@ -94,16 +94,12 @@ class _NamedTextFieldState extends State<NamedTextField> {
     if (widget.validator != null) {
       return widget.validator!(value);
     }
-    if (widget.keyboardType == TextInputType.emailAddress) {
-      return _emailValidator(value);
-    }
-    if (widget.keyboardType == TextInputType.visiblePassword) {
-      return _passwordValidator(value);
-    }
-    if (widget.keyboardType == TextInputType.name) {
-      return _nameValidator(value);
-    }
-    return _defaultValidator(value);
+    return switch (widget.keyboardType) {
+      TextInputType.emailAddress => _emailValidator(value),
+      TextInputType.visiblePassword => _passwordValidator(value),
+      TextInputType.name => _nameValidator(value),
+      _ => _defaultValidator(value)
+    };
   }
 
   String? _emailValidator(String? value) {

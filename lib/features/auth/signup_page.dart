@@ -117,6 +117,18 @@ class _SignupPageState extends State<SignupPage> {
                     controller: _confirmPassController,
                     visibilityButton: true,
                     keyboardType: TextInputType.visiblePassword,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Password is required';
+                      }
+                      if (value.trim().length < 6) {
+                        return 'Password must be at least 6 characters long';
+                      }
+                      if (value != _passController.text) {
+                        return "Passwords don't match";
+                      }
+                      return null;
+                    },
                   ),
                   SizedBox(height: 24.h),
                   Row(
@@ -131,59 +143,51 @@ class _SignupPageState extends State<SignupPage> {
                           setState(() => _agreeTerms = value);
                         },
                       ),
-                      Row(
-                        children: [
-                          Text(
-                            'I agree to all the ',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                          TextButton(
-                            onPressed: () {},
-                            style: TextButton.styleFrom(
-                              padding: EdgeInsets.zero,
-                              minimumSize: Size(0, 0),
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            ),
-                            child: Text(
-                              'Terms',
-                              style: Theme.of(context).textTheme.bodySmall!
-                                  .copyWith(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.primary,
-                                    decoration: TextDecoration.underline,
-                                    decorationColor: Theme.of(
-                                      context,
-                                    ).colorScheme.primary,
-                                  ),
-                            ),
-                          ),
-                          Text(
-                            ' and ',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                          TextButton(
-                            onPressed: () {},
-                            style: TextButton.styleFrom(
-                              padding: EdgeInsets.zero,
-                              minimumSize: Size(0, 0),
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            ),
-                            child: Text(
-                              'Privacy Policy',
-                              style: Theme.of(context).textTheme.bodySmall!
-                                  .copyWith(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.primary,
-                                    decoration: TextDecoration.underline,
-                                    decorationColor: Theme.of(
-                                      context,
-                                    ).colorScheme.primary,
-                                  ),
-                            ),
-                          ),
-                        ],
+                      Text(
+                        'I agree to all the ',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: Size(0, 0),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        child: Text(
+                          'Terms',
+                          style: Theme.of(context).textTheme.bodySmall!
+                              .copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                                decoration: TextDecoration.underline,
+                                decorationColor: Theme.of(
+                                  context,
+                                ).colorScheme.primary,
+                              ),
+                        ),
+                      ),
+                      Text(
+                        ' and ',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: Size(0, 0),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        child: Text(
+                          'Privacy Policy',
+                          style: Theme.of(context).textTheme.bodySmall!
+                              .copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                                decoration: TextDecoration.underline,
+                                decorationColor: Theme.of(
+                                  context,
+                                ).colorScheme.primary,
+                              ),
+                        ),
                       ),
                     ],
                   ),
