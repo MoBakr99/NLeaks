@@ -151,7 +151,7 @@ class _SignupPageState extends State<SignupPage> {
                         onPressed: () {},
                         style: TextButton.styleFrom(
                           padding: EdgeInsets.zero,
-                          minimumSize: Size(0, 0),
+                          minimumSize: const Size(0, 0),
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
                         child: Text(
@@ -174,7 +174,7 @@ class _SignupPageState extends State<SignupPage> {
                         onPressed: () {},
                         style: TextButton.styleFrom(
                           padding: EdgeInsets.zero,
-                          minimumSize: Size(0, 0),
+                          minimumSize: const Size(0, 0),
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
                         child: Text(
@@ -227,10 +227,10 @@ class _SignupPageState extends State<SignupPage> {
                     ],
                   ),
                   SizedBox(height: 32.h),
-                  OrDivider(login: false),
+                  const OrDivider(login: false),
                   SizedBox(height: 20.h),
                   SocialButtons(
-                    assets: <String>[
+                    assets: const <String>[
                       'assets/images/svgs/facebook_logo.svg',
                       'assets/images/svgs/google_logo.svg',
                       'assets/images/svgs/apple_logo.svg',

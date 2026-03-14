@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Form(
               key: _formKey,
               child: Column(
-                children: [
+                children: <Widget>[
                   Align(
                     alignment: AlignmentGeometry.centerLeft,
                     child: Text(
@@ -83,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
                               setState(() => _rememberUser = value);
                             },
                           ),
-                          Text('Remember me'),
+                          const Text('Remember me'),
                         ],
                       ),
                       TextButton(
@@ -117,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                    children: <Widget>[
                       Text(
                         "Don't have an account?",
                         style: Theme.of(context).textTheme.bodySmall,
@@ -141,10 +141,10 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                   SizedBox(height: 32.h),
-                  OrDivider(login: true),
+                  const OrDivider(login: true),
                   SizedBox(height: 16.h),
                   SocialButtons(
-                    assets: <String>[
+                    assets: const <String>[
                       'assets/images/svgs/facebook_logo.svg',
                       'assets/images/svgs/google_logo.svg',
                       'assets/images/svgs/apple_logo.svg',

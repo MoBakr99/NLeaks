@@ -17,12 +17,12 @@ class MyApp extends StatelessWidget {
       designSize: const Size(440, 956),
       minTextAdapt: true,
       builder: (context, child) => MaterialApp(
-          title: 'Flutter Demo',
-          debugShowCheckedModeBanner: false,
-          theme: appTheme,
-          routes: appRoutes,
-          home: const SplashScreen(),
-        ),
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: appTheme,
+        routes: appRoutes,
+        home: const SplashScreen(),
+      ),
     );
   }
 }

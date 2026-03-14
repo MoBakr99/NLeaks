@@ -31,7 +31,7 @@ class _NamedTextFieldState extends State<NamedTextField> {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+      children: <Widget>[
         Text(widget.name, style: Theme.of(context).textTheme.titleMedium),
         SizedBox(height: 5.h),
         TextFormField(
@@ -98,7 +98,7 @@ class _NamedTextFieldState extends State<NamedTextField> {
       TextInputType.emailAddress => _emailValidator(value),
       TextInputType.visiblePassword => _passwordValidator(value),
       TextInputType.name => _nameValidator(value),
-      _ => _defaultValidator(value)
+      _ => _defaultValidator(value),
     };
   }
 

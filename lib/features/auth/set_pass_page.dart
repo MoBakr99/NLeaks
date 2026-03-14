@@ -33,7 +33,7 @@ class _SetPassPageState extends State<SetPassPage> {
             child: Form(
               key: _formKey,
               child: Column(
-                children: [
+                children: <Widget>[
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(

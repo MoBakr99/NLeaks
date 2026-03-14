@@ -56,7 +56,7 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
         padding: EdgeInsets.symmetric(horizontal: 20.w),
         child: SingleChildScrollView(
           child: Column(
-            children: [
+            children: <Widget>[
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -93,7 +93,7 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                 text: 'Submit',
               ),
               SizedBox(height: 40.h),
-              OrDivider(login: true),
+              const OrDivider(login: true),
               SizedBox(height: 20.h),
               SocialButtons(onPressed: [() {}, () {}, () {}]),
             ],

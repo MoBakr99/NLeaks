@@ -54,7 +54,7 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
           child: Column(
-            children: [
+            children: <Widget>[
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -91,9 +91,9 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
                     },
                     child: Text(
                       'Resend',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodySmall!.copyWith(color: Color(0xFFFF8682)),
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        color: const Color(0xFFFF8682),
+                      ),
                     ),
                   ),
                 ],
