@@ -19,6 +19,7 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
   void dispose() {
     super.dispose();
     _codeController.dispose();
+    _formKey.currentState?.dispose();
   }
 
   @override

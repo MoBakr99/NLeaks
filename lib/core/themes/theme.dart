@@ -10,11 +10,17 @@ ThemeData get appTheme => ThemeData(
     secondary: informationColor,
     tertiary: lightGrayColor,
     surface: backgroundColor,
+    onSurface: floatingBackgroundColor
   ),
   textTheme: TextTheme(
     displayMedium: GoogleFonts.spaceGrotesk(
       color: lightGrayColor,
       fontSize: 32.sp,
+      fontWeight: FontWeight.w600,
+    ),
+    titleLarge: GoogleFonts.inter(
+      color: lightGrayColor,
+      fontSize: 24.sp,
       fontWeight: FontWeight.w600,
     ),
     titleMedium: GoogleFonts.inter(

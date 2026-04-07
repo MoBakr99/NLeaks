@@ -32,6 +32,7 @@ class _SignupPageState extends State<SignupPage> {
     _phoneController.dispose();
     _passController.dispose();
     _confirmPassController.dispose();
+    _formKey.currentState?.dispose();
   }
 
   @override

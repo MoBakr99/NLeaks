@@ -21,6 +21,7 @@ class _SetPassPageState extends State<SetPassPage> {
     super.dispose();
     _passController.dispose();
     _confirmPassController.dispose();
+    _formKey.currentState?.dispose();
   }
 
   @override

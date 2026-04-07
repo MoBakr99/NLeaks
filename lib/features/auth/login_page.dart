@@ -24,6 +24,7 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
     _emailController.dispose();
     _passController.dispose();
+    _formKey.currentState?.dispose();
   }
 
   @override
@@ -109,8 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         // Perform login action
-                        print('Success!\nEmail: ${_emailController.text}');
-                        print('Password: ${_passController.text}');
+                        Navigator.pushReplacementNamed(context, homeRoute);
                       }
                     },
                     text: 'Login',
