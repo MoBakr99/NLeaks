@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:n_leaks/features/home/components/app_nav_bar.dart';
 import 'package:n_leaks/features/home/controllers/nav_bar_controller.dart';
+import 'package:n_leaks/features/home/leaks_page.dart';
 import 'package:n_leaks/features/home/settings_page.dart';
 import 'package:n_leaks/features/home/users_page.dart';
 
@@ -16,7 +17,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   final List<List<Widget>> _pages = const [
     [UsersAppBar(), UsersPage()],
-    [SettingsAppBar(), SettingsPage()],
+    [LeaksAppBar(), LeaksPage()],
     [UsersAppBar(), UsersPage()],
     [SettingsAppBar(), SettingsPage()],
   ];

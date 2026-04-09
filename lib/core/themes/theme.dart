@@ -10,7 +10,11 @@ ThemeData get appTheme => ThemeData(
     secondary: informationColor,
     tertiary: lightGrayColor,
     surface: backgroundColor,
-    onSurface: floatingBackgroundColor
+    onSurface: onBackgroundColor,
+  ),
+  datePickerTheme: const DatePickerThemeData(
+    rangeSelectionBackgroundColor: onBackgroundColor,
+    rangePickerHeaderForegroundColor: lightGrayColor,
   ),
   textTheme: TextTheme(
     displayMedium: GoogleFonts.spaceGrotesk(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:n_leaks/features/home/widgets/user_info_display.dart';
 
 class UsersAppBar extends StatelessWidget {
   const UsersAppBar({super.key});
@@ -58,33 +59,30 @@ class _UsersPageState extends State<UsersPage> {
       itemCount: _users.length,
       itemBuilder: (context, index) => Container(
         height: 96.h,
+        alignment: Alignment.center,
+        padding: EdgeInsets.only(left: 16.w),
         margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.onSurface,
           borderRadius: BorderRadius.circular(15.r),
         ),
-        child: ListTile(
-          leading: CircleAvatar(
-            radius: 30.r,
-            backgroundImage: AssetImage(_users[index]['photo']!),
-          ),
-          title: Text(
-            _users[index]['name']!,
-            style: Theme.of(context).textTheme.titleLarge,
-            overflow: TextOverflow.ellipsis,
-          ),
-          subtitle: Text(
-            _users[index]['email']!,
-            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              color: Theme.of(
-                context,
-              ).textTheme.bodyMedium!.color!.withValues(alpha: 0.8),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: UserInfoDisplay(
+                name: _users[index]['name']!,
+                email: _users[index]['email']!,
+                avatarUrl: _users[index]['photo']!,
+              ),
             ),
-          ),
-          trailing: Icon(
-            Icons.more_vert,
-            color: Theme.of(context).colorScheme.tertiary,
-          ),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.more_vert,
+                color: Theme.of(context).colorScheme.tertiary,
+              ),
+            ),
+          ],
         ),
       ),
     );
