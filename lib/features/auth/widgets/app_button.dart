@@ -18,7 +18,12 @@ class AppButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.r),
         ),
-        child: Text(text, style: Theme.of(context).textTheme.labelMedium),
+        child: Text(
+          text,
+          style: Theme.of(context).textTheme.labelMedium!.copyWith(
+            color: Theme.of(context).colorScheme.surface,
+          ),
+        ),
       ),
     );
   }

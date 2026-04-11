@@ -9,6 +9,7 @@ ThemeData get appTheme => ThemeData(
     primary: primaryColor,
     secondary: informationColor,
     tertiary: lightGrayColor,
+    tertiaryFixed: mutedGrayColor,
     surface: backgroundColor,
     onSurface: onBackgroundColor,
   ),
@@ -48,7 +49,7 @@ ThemeData get appTheme => ThemeData(
       fontWeight: FontWeight.w400,
     ),
     labelMedium: GoogleFonts.inter(
-      color: backgroundColor,
+      color: lightGrayColor,
       fontSize: 12.sp,
       fontWeight: FontWeight.w500,
     ),

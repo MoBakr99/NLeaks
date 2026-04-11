@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:n_leaks/features/home/components/app_nav_bar.dart';
 import 'package:n_leaks/features/home/controllers/nav_bar_controller.dart';
+import 'package:n_leaks/features/home/home_page.dart';
 import 'package:n_leaks/features/home/leaks_page.dart';
 import 'package:n_leaks/features/home/settings_page.dart';
 import 'package:n_leaks/features/home/users_page.dart';
@@ -16,7 +17,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   final List<List<Widget>> _pages = const [
-    [UsersAppBar(), UsersPage()],
+    [HomeAppBar(), HomePage()],
     [LeaksAppBar(), LeaksPage()],
     [UsersAppBar(), UsersPage()],
     [SettingsAppBar(), SettingsPage()],
@@ -30,6 +31,7 @@ class _MainPageState extends State<MainPage> {
         builder: (context, indexState) {
           return Scaffold(
             extendBody: true,
+            extendBodyBehindAppBar: indexState == 0,
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(80.h),
               child: _pages[indexState][0],

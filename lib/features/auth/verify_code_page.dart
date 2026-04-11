@@ -43,9 +43,7 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
               SizedBox(width: 4.w),
               Text(
                 'Back to login',
-                style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                  color: Theme.of(context).colorScheme.tertiary,
-                ),
+                style: Theme.of(context).textTheme.labelMedium,
               ),
             ],
           ),
