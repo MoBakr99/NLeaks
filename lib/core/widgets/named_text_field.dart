@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:n_leaks/core/widgets/app_popup_menu.dart';
 
 class NamedTextField extends StatefulWidget {
   const NamedTextField({
@@ -10,11 +11,15 @@ class NamedTextField extends StatefulWidget {
     this.controller,
     this.validator,
     this.keyboardType,
+    this.editable = true,
+    this.options = const [],
     this.visibilityButton = false,
   });
 
   final String name;
+  final bool editable;
   final String? hintText;
+  final List<String> options;
   final bool visibilityButton;
   final TextInputType? keyboardType;
   final TextEditingController? controller;
@@ -32,33 +37,57 @@ class _NamedTextFieldState extends State<NamedTextField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(widget.name, style: Theme.of(context).textTheme.titleMedium),
+        Row(
+          children: <Widget>[
+            Text(widget.name, style: Theme.of(context).textTheme.titleMedium),
+            if (!widget.editable) ...[
+              SizedBox(width: 10.w),
+              SvgPicture.asset(
+                'assets/images/svgs/lock_icon.svg',
+                height: 15.h,
+              ),
+            ],
+          ],
+        ),
         SizedBox(height: 5.h),
         TextFormField(
           obscureText: widget.visibilityButton ? _obscureText : false,
           obscuringCharacter: '*',
           controller: widget.controller,
+          readOnly: !widget.editable || widget.options.isNotEmpty,
           keyboardType: widget.keyboardType,
           validator: _validatorPicker,
           cursorErrorColor: Theme.of(context).colorScheme.primary,
-          style: Theme.of(context).textTheme.bodySmall,
+          style: widget.editable
+              ? Theme.of(context).textTheme.bodySmall
+              : Theme.of(context).textTheme.bodySmall!.copyWith(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.surface.withValues(alpha: 0.5),
+                ),
           decoration: InputDecoration(
             hintText: widget.hintText,
             hintStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
-              color: Theme.of(context).colorScheme.primary.withAlpha(180),
+              color: Theme.of(
+                context,
+              ).colorScheme.tertiary.withValues(alpha: 0.7),
             ),
             filled: true,
-            fillColor: Theme.of(context).colorScheme.secondary,
+            fillColor: widget.editable
+                ? Theme.of(context).colorScheme.secondary
+                : Theme.of(context).colorScheme.tertiaryFixed,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
               borderSide: BorderSide.none,
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(
-                color: Theme.of(context).colorScheme.primary,
-                width: 2,
-              ),
+              borderSide: !widget.editable || widget.options.isNotEmpty
+                  ? BorderSide.none
+                  : BorderSide(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 2,
+                    ),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
@@ -83,6 +112,17 @@ class _NamedTextFieldState extends State<NamedTextField> {
                       setState(() => _obscureText = !_obscureText);
                     },
                   )
+                : widget.options.isNotEmpty
+                ? AppPopupMenu(
+                    options: widget.options,
+                    onSelected: (value) {
+                      widget.controller?.text = value;
+                    },
+                    child: Icon(
+                      Icons.keyboard_arrow_down,
+                      color: Theme.of(context).colorScheme.tertiary,
+                    ),
+                  )
                 : null,
           ),
         ),
@@ -95,9 +135,9 @@ class _NamedTextFieldState extends State<NamedTextField> {
       return widget.validator!(value);
     }
     return switch (widget.keyboardType) {
+      TextInputType.name => _nameValidator(value),
       TextInputType.emailAddress => _emailValidator(value),
       TextInputType.visiblePassword => _passwordValidator(value),
-      TextInputType.name => _nameValidator(value),
       _ => _defaultValidator(value),
     };
   }

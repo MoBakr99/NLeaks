@@ -3,6 +3,7 @@ import 'package:n_leaks/features/auth/forgot_pass_page.dart';
 import 'package:n_leaks/features/auth/set_pass_page.dart';
 import 'package:n_leaks/features/auth/verify_code_page.dart';
 import 'package:n_leaks/features/home/main_page.dart';
+import 'package:n_leaks/features/settings/profile_page.dart';
 import 'package:n_leaks/splash_screen.dart';
 import 'package:n_leaks/features/auth/login_page.dart';
 import 'package:n_leaks/features/auth/signup_page.dart';
@@ -25,4 +26,5 @@ Map<String, Widget Function(BuildContext)> get appRoutes => {
   forgotPassRoute: (context) => const ForgotPassPage(),
   verifyCodeRoute: (context) => const VerifyCodePage(),
   resetPassRoute: (context) => const SetPassPage(),
+  profileRoute: (context) => const ProfilePage(),
 };
