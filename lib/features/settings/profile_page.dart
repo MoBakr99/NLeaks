@@ -32,6 +32,19 @@ class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController _companyController = TextEditingController();
 
   @override
+  void dispose() {
+    super.dispose();
+    _fullNameController.dispose();
+    _usernameController.dispose();
+    _genderController.dispose();
+    _countryController.dispose();
+    _phoneController.dispose();
+    _languageController.dispose();
+    _positionController.dispose();
+    _companyController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
