@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:n_leaks/features/home/components/leaks_graph.dart';
-import 'package:n_leaks/features/home/components/subscription_card.dart';
+import 'package:n_leaks/core/widgets/subscription_card.dart';
 import 'package:n_leaks/features/home/widgets/overview_card.dart';
 
 class HomeAppBar extends StatelessWidget {
@@ -87,7 +87,13 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           spacing: 10.h,
           children: <Widget>[
-            const SubscriptionCard(),
+            SubscriptionCard(
+              corporationLogoPath: 'assets/images/svgs/corporation_logo.svg',
+              corporationName: 'Acme Corporation',
+              subscriptionPlan: 'Pro',
+              subscriptionDate: DateTime(2024, 1, 12),
+              subscriptionStatus: 'Active',
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[

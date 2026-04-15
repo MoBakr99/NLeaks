@@ -4,6 +4,7 @@ import 'package:n_leaks/features/auth/set_pass_page.dart';
 import 'package:n_leaks/features/auth/verify_code_page.dart';
 import 'package:n_leaks/features/home/main_page.dart';
 import 'package:n_leaks/features/settings/profile_page.dart';
+import 'package:n_leaks/features/settings/subscription_page.dart';
 import 'package:n_leaks/splash_screen.dart';
 import 'package:n_leaks/features/auth/login_page.dart';
 import 'package:n_leaks/features/auth/signup_page.dart';
@@ -16,7 +17,7 @@ const String forgotPassRoute = '/forgot-pass';
 const String verifyCodeRoute = '/verify-code';
 const String resetPassRoute = '/reset-pass';
 const String profileRoute = '/profile';
-const String settingsRoute = '/settings';
+const String subscriptionRoute = '/subscription';
 
 Map<String, Widget Function(BuildContext)> get appRoutes => {
   splashRoute: (context) => const SplashScreen(),
@@ -27,4 +28,5 @@ Map<String, Widget Function(BuildContext)> get appRoutes => {
   verifyCodeRoute: (context) => const VerifyCodePage(),
   resetPassRoute: (context) => const SetPassPage(),
   profileRoute: (context) => const ProfilePage(),
+  subscriptionRoute: (context) => const SubscriptionPage(),
 };

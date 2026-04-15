@@ -59,7 +59,9 @@ class SettingsPage extends StatelessWidget {
               color: Theme.of(context).colorScheme.tertiary,
             ),
             contentPadding: EdgeInsets.symmetric(horizontal: 30.w),
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, '/subscription');
+            },
           ),
           ListTile(
             title: Text(

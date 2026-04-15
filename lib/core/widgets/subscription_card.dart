@@ -5,16 +5,26 @@ import 'package:intl/intl.dart';
 import 'package:n_leaks/core/constants/app_colors.dart';
 
 class SubscriptionCard extends StatefulWidget {
-  const SubscriptionCard({super.key});
+  const SubscriptionCard({
+    super.key,
+    required this.corporationLogoPath,
+    required this.corporationName,
+    required this.subscriptionPlan,
+    required this.subscriptionDate,
+    required this.subscriptionStatus,
+  });
+
+  final String corporationLogoPath;
+  final String corporationName;
+  final String subscriptionPlan;
+  final DateTime subscriptionDate;
+  final String subscriptionStatus;
 
   @override
   State<SubscriptionCard> createState() => _SubscriptionCardState();
 }
 
 class _SubscriptionCardState extends State<SubscriptionCard> {
-  final DateTime _subscriptionDate = DateTime(2024, 1, 12);
-  final String _subscriptionStatus = 'Active';
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,11 +39,11 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
           spacing: 10.h,
           children: <Widget>[
             SvgPicture.asset(
-              'assets/images/svgs/corporation_logo.svg',
+              widget.corporationLogoPath,
               height: 80.h,
             ),
             Text(
-              'Acme Corporation',
+              widget.corporationName,
               style: Theme.of(context).textTheme.displayMedium,
             ),
             Container(
@@ -45,7 +55,7 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
               ),
               child: Center(
                 child: Text(
-                  'Pro',
+                  widget.subscriptionPlan,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     color: Theme.of(context).colorScheme.surface,
                     fontWeight: FontWeight.w700,
@@ -61,7 +71,7 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                 ).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w700),
                 children: [
                   TextSpan(
-                    text: DateFormat('MMM dd, yyyy').format(_subscriptionDate),
+                    text: DateFormat('MMM dd, yyyy').format(widget.subscriptionDate),
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: Theme.of(context).colorScheme.tertiaryFixed,
                     ),
@@ -82,7 +92,7 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                     ),
                     children: [
                       TextSpan(
-                        text: _subscriptionStatus,
+                        text: widget.subscriptionStatus,
                         style: Theme.of(
                           context,
                         ).textTheme.bodyMedium!.copyWith(color: successColor),
