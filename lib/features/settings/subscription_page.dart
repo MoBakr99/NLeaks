@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:n_leaks/core/controllers/corp_controller.dart';
+import 'package:n_leaks/core/data/models/corp_model.dart';
 import 'package:n_leaks/core/widgets/named_text_field.dart';
 import 'package:n_leaks/core/widgets/subscription_card.dart';
 import 'package:n_leaks/features/settings/components/domains_input_field.dart';
@@ -14,25 +17,11 @@ class SubscriptionPage extends StatefulWidget {
 }
 
 class _SubscriptionPageState extends State<SubscriptionPage> {
-  final Map<String, Object> _subscriptionInfo = {
-    'corporationLogoPath': 'assets/images/svgs/corporation_logo.svg',
-    'corporationName': 'Acme Corporation',
-    'corporationIndustry': 'Technology',
-    'corporationUserCount': '130',
-    'corporationAdminEmail': 'security@acme.inc',
-    'corporationDomains': <String>['acme.inc', 'acme-labs.io'],
-    'subscriptionDate': DateTime(2024, 1, 12),
-    'subscriptionPlan': 'Pro',
-    'subscriptionStatus': 'Active',
-  };
-
-  final List<TextEditingController> _fieldsControllers = [
-    TextEditingController(),
-    TextEditingController(),
-    TextEditingController(),
-    TextEditingController(),
-    TextEditingController(),
-  ];
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final List<TextEditingController> _fieldsControllers = List.generate(
+    5,
+    (index) => TextEditingController(),
+  );
 
   @override
   void dispose() {
@@ -42,6 +31,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
 
   @override
   Widget build(BuildContext context) {
+    final CorpModel corpInfo = context.watch<CorpController>().state!;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -75,80 +65,86 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
             top: 120.h,
             bottom: 30.h,
           ),
-          child: Column(
-            spacing: 20.h,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              SubscriptionCard(
-                corporationLogoPath:
-                    _subscriptionInfo['corporationLogoPath'] as String,
-                corporationName: _subscriptionInfo['corporationName'] as String,
-                subscriptionPlan:
-                    _subscriptionInfo['subscriptionPlan'] as String,
-                subscriptionDate:
-                    _subscriptionInfo['subscriptionDate'] as DateTime,
-                subscriptionStatus:
-                    _subscriptionInfo['subscriptionStatus'] as String,
-              ),
-              Text(
-                'Company Information',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              NamedTextField(
-                name: 'Company Name',
-                controller: _fieldsControllers[0]
-                  ..text = _subscriptionInfo['corporationName'] as String,
-              ),
-              NamedTextField(
-                name: 'Industry',
-                controller: _fieldsControllers[1]
-                  ..text = _subscriptionInfo['corporationIndustry'] as String,
-              ),
-              NamedTextField(
-                name: 'Expected User Count',
-                controller: _fieldsControllers[2]
-                  ..text = _subscriptionInfo['corporationUserCount'] as String,
-                keyboardType: TextInputType.number,
-              ),
-              NamedTextField(
-                name: 'Admin Contact Email',
-                controller: _fieldsControllers[3]
-                  ..text = _subscriptionInfo['corporationAdminEmail'] as String,
-              ),
-              DomainsInputField(
-                domains:
-                    _subscriptionInfo['corporationDomains'] as List<String>,
-                controller: _fieldsControllers[4],
-              ),
-              Row(
-                spacing: 10.w,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  AppMaterialButton(
-                    child: Text(
-                      'Save as Draft',
-                      style: Theme.of(context).textTheme.labelMedium,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              spacing: 20.h,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SubscriptionCard(
+                  corporationLogoPath: corpInfo.logoUrl,
+                  corporationName: corpInfo.name,
+                  subscriptionPlan: corpInfo.subscriptionPlan,
+                  subscriptionDate: corpInfo.subscriptionDate,
+                  subscriptionStatus: corpInfo.subscriptionStatus,
+                ),
+                Text(
+                  'Company Information',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                NamedTextField(
+                  name: 'Company Name',
+                  controller: _fieldsControllers[0]..text = corpInfo.name,
+                ),
+                NamedTextField(
+                  name: 'Industry',
+                  controller: _fieldsControllers[1]..text = corpInfo.industry,
+                ),
+                NamedTextField(
+                  name: 'Expected User Count',
+                  controller: _fieldsControllers[2]
+                    ..text = corpInfo.usersLimit.toString(),
+                  keyboardType: TextInputType.number,
+                ),
+                NamedTextField(
+                  name: 'Admin Contact Email',
+                  controller: _fieldsControllers[3]
+                    ..text = corpInfo.contactEmail,
+                ),
+                DomainsInputField(
+                  domains: corpInfo.domains,
+                  controller: _fieldsControllers[4],
+                ),
+                Row(
+                  spacing: 10.w,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    AppMaterialButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          // Handle save as draft logic
+                        }
+                      },
+                      child: Text(
+                        'Save as Draft',
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
                     ),
-                  ),
-                  AppMaterialButton(
-                    child: Row(
-                      spacing: 10.w,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        SvgPicture.asset(
-                          'assets/images/svgs/send_icon.svg',
-                          width: 15,
-                        ),
-                        Text(
-                          'Send Update Request',
-                          style: Theme.of(context).textTheme.labelMedium,
-                        ),
-                      ],
+                    AppMaterialButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          // Handle send update request logic
+                        }
+                      },
+                      child: Row(
+                        spacing: 10.w,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          SvgPicture.asset(
+                            'assets/images/svgs/send_icon.svg',
+                            width: 15,
+                          ),
+                          Text(
+                            'Send Update Request',
+                            style: Theme.of(context).textTheme.labelMedium,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

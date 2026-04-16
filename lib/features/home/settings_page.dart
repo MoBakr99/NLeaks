@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:n_leaks/core/controllers/corp_controller.dart';
 
 class SettingsAppBar extends StatelessWidget {
   const SettingsAppBar({super.key});
@@ -17,6 +19,7 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String role = context.watch<CorpController>().state!.currentUser.role;
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -48,21 +51,22 @@ class SettingsPage extends StatelessWidget {
             contentPadding: EdgeInsets.symmetric(horizontal: 30.w),
             onTap: () {},
           ),
-          ListTile(
-            title: Text(
-              'Subscription',
-              style: Theme.of(context).textTheme.titleMedium,
+          if (role == 'Admin')
+            ListTile(
+              title: Text(
+                'Subscription',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: 14.sp,
+                color: Theme.of(context).colorScheme.tertiary,
+              ),
+              contentPadding: EdgeInsets.symmetric(horizontal: 30.w),
+              onTap: () {
+                Navigator.pushNamed(context, '/subscription');
+              },
             ),
-            trailing: Icon(
-              Icons.arrow_forward_ios,
-              size: 14.sp,
-              color: Theme.of(context).colorScheme.tertiary,
-            ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 30.w),
-            onTap: () {
-              Navigator.pushNamed(context, '/subscription');
-            },
-          ),
           ListTile(
             title: Text(
               'Change Password',
@@ -76,19 +80,20 @@ class SettingsPage extends StatelessWidget {
             contentPadding: EdgeInsets.symmetric(horizontal: 30.w),
             onTap: () {},
           ),
-          ListTile(
-            title: Text(
-              'Add Payment Method',
-              style: Theme.of(context).textTheme.titleMedium,
+          if (role == 'Admin')
+            ListTile(
+              title: Text(
+                'Add Payment Method',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              trailing: Icon(
+                Icons.add,
+                size: 16.sp,
+                color: Theme.of(context).colorScheme.tertiary,
+              ),
+              contentPadding: EdgeInsets.symmetric(horizontal: 30.w),
+              onTap: () {},
             ),
-            trailing: Icon(
-              Icons.add,
-              size: 16.sp,
-              color: Theme.of(context).colorScheme.tertiary,
-            ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 30.w),
-            onTap: () {},
-          ),
         ],
       ),
     );

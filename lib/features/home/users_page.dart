@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:n_leaks/core/controllers/corp_controller.dart';
 import 'package:n_leaks/features/home/widgets/user_info_display.dart';
 
 class UsersAppBar extends StatelessWidget {
@@ -43,20 +45,11 @@ class UsersPage extends StatefulWidget {
 }
 
 class _UsersPageState extends State<UsersPage> {
-  final List<Map<String, String>> _users = List.generate(
-    20,
-    (index) => {
-      'name': 'Francisco Miles',
-      'email': 'user@acme.com',
-      'photo': 'assets/images/pngs/user_photo.png',
-    },
-  );
-
-  // const [
   @override
   Widget build(BuildContext context) {
+    final users = context.watch<CorpController>().state!.users;
     return ListView.builder(
-      itemCount: _users.length,
+      itemCount: users.length,
       itemBuilder: (context, index) => Container(
         height: 96.h,
         alignment: Alignment.center,
@@ -70,9 +63,9 @@ class _UsersPageState extends State<UsersPage> {
           children: <Widget>[
             Expanded(
               child: UserInfoDisplay(
-                name: _users[index]['name']!,
-                email: _users[index]['email']!,
-                avatarUrl: _users[index]['photo']!,
+                name: users[index].name,
+                email: users[index].email,
+                avatarUrl: users[index].pictureUrl,
               ),
             ),
             IconButton(

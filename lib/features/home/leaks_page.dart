@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:n_leaks/core/controllers/corp_controller.dart';
+import 'package:n_leaks/core/data/models/leak_model.dart';
 import 'package:n_leaks/features/home/widgets/leak_status_widget.dart';
 import 'package:n_leaks/features/home/components/leaks_filter.dart';
 import 'package:n_leaks/features/home/widgets/user_info_display.dart';
@@ -33,64 +36,87 @@ class LeaksPage extends StatefulWidget {
 }
 
 class _LeaksPageState extends State<LeaksPage> {
-  final List<Map<String, String>> _leaks = List.generate(
-    20,
-    (index) => {
-      'name': 'Francisco Miles',
-      'email': 'user@acme.com',
-      'status': ['Unverified', 'Active', 'Inactive'][index % 3],
-    },
-  );
-
   DateTimeRange? _selectedDateRange;
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final List<LeakModel>? leaks = context.watch<CorpController>().state!.leaks;
+
+    final filteredLeaks = leaks
+        ?.where(
+          (leak) =>
+              (_selectedDateRange == null ||
+                  (leak.date.isAfter(_selectedDateRange!.start) &&
+                      leak.date.isBefore(_selectedDateRange!.end))) &&
+              (_searchController.text.isEmpty ||
+                  leak.name.toLowerCase().contains(
+                    _searchController.text.toLowerCase(),
+                  ) ||
+                  leak.email.toLowerCase().contains(
+                    _searchController.text.toLowerCase(),
+                  )),
+        )
+        .toList();
     return Column(
       children: <Widget>[
         SizedBox(
           height: 100.h,
           child: LeaksFilter(
             dateRange: _selectedDateRange,
+            searchController: _searchController,
+            onSearchChanged: (value) => setState(() {}),
             onStatusFilterPressed: _setStatusFilter,
             onDateRangeFilterPressed: _setDateRange,
           ),
         ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: _leaks.length,
-            itemBuilder: (context, index) {
-              final leak = _leaks[index];
-              return Container(
-                height: 80.h,
-                padding: EdgeInsets.only(left: 16.w),
-                margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onSurface,
-                  borderRadius: BorderRadius.circular(15.r),
+        filteredLeaks == null || filteredLeaks.isEmpty
+            ? Expanded(
+                child: Center(
+                  child: Text(
+                    'No leaks found for the selected filters.',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                 ),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: UserInfoDisplay(
-                        name: leak['name']!,
-                        email: leak['email']!,
+              )
+            : Expanded(
+                child: ListView.builder(
+                  itemCount: filteredLeaks.length,
+                  itemBuilder: (context, index) {
+                    final leak = filteredLeaks[index];
+                    return Container(
+                      height: 80.h,
+                      padding: EdgeInsets.only(left: 16.w),
+                      margin: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                        vertical: 5.h,
                       ),
-                    ),
-                    LeakStatusWidget(status: leak['status']!),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.more_vert,
-                        color: Theme.of(context).colorScheme.tertiary,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        borderRadius: BorderRadius.circular(15.r),
                       ),
-                    ),
-                  ],
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: UserInfoDisplay(
+                              name: leak.name,
+                              email: leak.email,
+                            ),
+                          ),
+                          LeakStatusWidget(status: leak.status),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.more_vert,
+                              color: Theme.of(context).colorScheme.tertiary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
-        ),
+              ),
       ],
     );
   }

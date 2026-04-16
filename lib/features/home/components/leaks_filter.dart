@@ -7,11 +7,15 @@ class LeaksFilter extends StatefulWidget {
   const LeaksFilter({
     super.key,
     this.dateRange,
+    this.searchController,
+    this.onSearchChanged,
     this.onStatusFilterPressed,
     this.onDateRangeFilterPressed,
   });
 
   final DateTimeRange? dateRange;
+  final TextEditingController? searchController;
+  final Function(String)? onSearchChanged;
   final Function()? onStatusFilterPressed;
   final Function()? onDateRangeFilterPressed;
 
@@ -30,7 +34,9 @@ class _LeaksFilterState extends State<LeaksFilter> {
           SizedBox(
             height: 43.h,
             child: TextFormField(
+              controller: widget.searchController,
               style: Theme.of(context).textTheme.bodyMedium,
+              onChanged: widget.onSearchChanged,
               decoration: InputDecoration(
                 hintText: 'Search for anything',
                 hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(

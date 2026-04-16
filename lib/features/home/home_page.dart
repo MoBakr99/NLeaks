@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:n_leaks/core/controllers/corp_controller.dart';
+import 'package:n_leaks/core/data/models/corp_model.dart';
 import 'package:n_leaks/features/home/components/leaks_graph.dart';
 import 'package:n_leaks/core/widgets/subscription_card.dart';
 import 'package:n_leaks/features/home/widgets/overview_card.dart';
 
 class HomeAppBar extends StatelessWidget {
   const HomeAppBar({super.key});
-
-  final String _userName = 'Salah Ahmad';
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +26,9 @@ class HomeAppBar extends StatelessWidget {
           padding: EdgeInsets.only(left: 20.w, top: 4.h),
           child: CircleAvatar(
             radius: 32.r,
-            backgroundImage: const AssetImage(
-              'assets/images/pngs/main_user_photo.png',
+            backgroundImage: AssetImage(
+              context.watch<CorpController>().state!.currentUser.pictureUrl ??
+                  'assets/images/pngs/main_user_photo.png',
             ),
           ),
         ),
@@ -36,7 +38,10 @@ class HomeAppBar extends StatelessWidget {
         children: [
           Text('Hello!', style: Theme.of(context).textTheme.titleSmall),
           SizedBox(height: 5.h),
-          Text(_userName, style: Theme.of(context).textTheme.displayMedium),
+          Text(
+            context.watch<CorpController>().state!.currentUser.name,
+            style: Theme.of(context).textTheme.displayMedium,
+          ),
         ],
       ),
       actions: [
@@ -60,27 +65,33 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<Map<String, String>> _overviewData = [
-    {
-      'title': 'Total Users',
-      'value': '124',
-      'iconPath': 'assets/images/svgs/users_card_icon.svg',
-      'scaleUp': 'true',
-    },
-    {
-      'title': 'Total Leaks',
-      'value': '12',
-      'iconPath': 'assets/images/svgs/warning_icon.svg',
-    },
-    {
-      'title': 'High Risk Leaks',
-      'value': '3',
-      'iconPath': 'assets/images/svgs/danger_icon.svg',
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final CorpModel corpInfo = context.watch<CorpController>().state!;
+    final List<Map<String, String>> overviewDataCards = [
+      {
+        'title': 'Total Users',
+        'value': corpInfo.users.length.toString(),
+        'iconPath': 'assets/images/svgs/users_card_icon.svg',
+        'scaleUp': 'true',
+      },
+      {
+        'title': 'Total Leaks',
+        'value': corpInfo.leaks?.length.toString() ?? '0',
+        'iconPath': 'assets/images/svgs/warning_icon.svg',
+      },
+      {
+        'title': 'High Risk Leaks',
+        'value':
+            corpInfo.leaks
+                ?.where((leak) => leak.status == 'Active')
+                .length
+                .toString() ??
+            '0',
+        'iconPath': 'assets/images/svgs/danger_icon.svg',
+      },
+    ];
+
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 120.h),
@@ -88,11 +99,11 @@ class _HomePageState extends State<HomePage> {
           spacing: 10.h,
           children: <Widget>[
             SubscriptionCard(
-              corporationLogoPath: 'assets/images/svgs/corporation_logo.svg',
-              corporationName: 'Acme Corporation',
-              subscriptionPlan: 'Pro',
-              subscriptionDate: DateTime(2024, 1, 12),
-              subscriptionStatus: 'Active',
+              corporationLogoPath: corpInfo.logoUrl,
+              corporationName: corpInfo.name,
+              subscriptionPlan: corpInfo.subscriptionPlan,
+              subscriptionDate: corpInfo.subscriptionDate,
+              subscriptionStatus: corpInfo.subscriptionStatus,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -135,16 +146,16 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               height: 135.h,
               child: ListView.builder(
-                itemCount: _overviewData.length,
+                itemCount: overviewDataCards.length,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: EdgeInsets.only(left: index != 0 ? 20.w : 0),
                     child: OverviewCard(
-                      cardTitle: _overviewData[index]['title']!,
-                      cardValue: _overviewData[index]['value']!,
-                      cardIconPath: _overviewData[index]['iconPath']!,
-                      scaleUp: _overviewData[index]['scaleUp'] == 'true',
+                      cardTitle: overviewDataCards[index]['title']!,
+                      cardValue: overviewDataCards[index]['value']!,
+                      cardIconPath: overviewDataCards[index]['iconPath']!,
+                      scaleUp: overviewDataCards[index]['scaleUp'] == 'true',
                     ),
                   );
                 },

@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:n_leaks/core/constants/app_routes.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:n_leaks/core/controllers/corp_controller.dart';
+import 'package:n_leaks/core/data/models/corp_model.dart';
+import 'package:n_leaks/core/data/models/leak_model.dart';
+import 'package:n_leaks/core/data/models/user_model.dart';
 import 'package:n_leaks/core/widgets/named_text_field.dart';
 import 'package:n_leaks/features/auth/widgets/app_button.dart';
 import 'package:n_leaks/features/auth/widgets/or_divider.dart';
@@ -110,7 +115,14 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         // Perform login action
-                        Navigator.pushReplacementNamed(context, homeRoute);
+                        final CorpModel? corp = _login(
+                          _emailController.text,
+                          _passController.text,
+                        );
+                        if (corp != null) {
+                          context.read<CorpController>().add(LogIn(corp));
+                          Navigator.pushReplacementNamed(context, homeRoute);
+                        }
                       }
                     },
                     text: 'Login',
@@ -155,6 +167,95 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  CorpModel? _login(String email, String password) {
+    // Simulate login logic
+
+    // Dummy Data
+    final List<String> fNames = [
+      'Ahmed',
+      'Ezz',
+      'Fares',
+      'Mazen',
+      'Mohammad',
+      'Mustafa',
+      'Omar',
+    ];
+
+    final List<String> lNames = [
+      'Adel',
+      'Bakr',
+      'Daif',
+      'Farahat',
+      'Hasan',
+      'Nayel',
+      'Othman',
+      'Ragab',
+      'Yahia',
+    ];
+
+    final List<String> names = List.generate(
+      30,
+      (index) =>
+          '${fNames[index % fNames.length]} ${lNames[index % lNames.length]}',
+    )..shuffle();
+
+    final List<String> positions = [
+      'Backend Developer',
+      'Cybersecurity',
+      'Data Scientist',
+      'Flutter Developer',
+      'Frontend Developer',
+      'Product Manager',
+      'Software Engineer',
+      'UI/UX Designer',
+    ];
+
+    return CorpModel(
+      name: 'Acme Corporation',
+      logoUrl: 'assets/images/svgs/corporation_logo.svg',
+      contactEmail: 'security@acme.inc',
+      industry: 'Technology',
+      subscriptionDate: DateTime(2024, 1, 12),
+      subscriptionPlan: 'Pro',
+      subscriptionStatus: 'Active',
+      domains: ['acme.com', 'acme.inc', 'acme-labs.io'],
+      usersLimit: 130,
+      currentUser: UserModel(
+        id: '22010232',
+        name: 'Mohammad Bakr',
+        username: 'MoBakr99',
+        email: email,
+        position: 'Software Engineer',
+        company: 'Acme Corporation',
+        pictureUrl: 'assets/images/pngs/main_user_photo.png',
+        role: 'Admin',
+      ),
+      users: List.generate(
+        30,
+        (index) => UserModel(
+          id: '${index + 22010201}',
+          name: names[index],
+          username: '${names[index]}_$index',
+          email: '${names[index]}${index + 11}@acme.com',
+          position: positions[index % positions.length],
+          company: 'Acme Corporation',
+          pictureUrl: 'assets/images/pngs/user_photo.png',
+          country: 'Egypt',
+        ),
+      ),
+      leaks: List.generate(
+        20,
+        (index) => LeakModel(
+          id: '$index',
+          name: names.reversed.toList()[index],
+          email: '${names.reversed.toList()[index]}${index + 11}@acme.com',
+          date: DateTime(2024, 1, 22).add(Duration(days: index * 10)),
+          status: ['Active', 'Inactive', 'Unverified'][index % 3],
         ),
       ),
     );
