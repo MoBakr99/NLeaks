@@ -38,6 +38,13 @@ class LeaksPage extends StatefulWidget {
 class _LeaksPageState extends State<LeaksPage> {
   DateTimeRange? _selectedDateRange;
   final TextEditingController _searchController = TextEditingController();
+  final Set<String> _selectedStatuses = <String>{};
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +62,9 @@ class _LeaksPageState extends State<LeaksPage> {
                   ) ||
                   leak.email.toLowerCase().contains(
                     _searchController.text.toLowerCase(),
-                  )),
+                  )) &&
+              (_selectedStatuses.isEmpty ||
+                  _selectedStatuses.contains(leak.status)),
         )
         .toList();
     return Column(
@@ -66,7 +75,15 @@ class _LeaksPageState extends State<LeaksPage> {
             dateRange: _selectedDateRange,
             searchController: _searchController,
             onSearchChanged: (value) => setState(() {}),
-            onStatusFilterPressed: _setStatusFilter,
+            statusOptions: const ['Unverified', 'Active', 'Inactive'],
+            selectedStatuses: _selectedStatuses,
+            onStatusSelectionChanged: (values) {
+              setState(() {
+                _selectedStatuses
+                  ..clear()
+                  ..addAll(values);
+              });
+            },
             onDateRangeFilterPressed: _setDateRange,
           ),
         ),
@@ -118,37 +135,6 @@ class _LeaksPageState extends State<LeaksPage> {
                 ),
               ),
       ],
-    );
-  }
-
-  void _setStatusFilter() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Filter by Status'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: ['Unverified', 'Active', 'Inactive']
-              .map(
-                (status) => CheckboxListTile(
-                  title: Text(status),
-                  value: false,
-                  onChanged: (value) {},
-                ),
-              )
-              .toList(),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Apply'),
-          ),
-        ],
-      ),
     );
   }
 
