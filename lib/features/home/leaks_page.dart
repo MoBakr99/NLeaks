@@ -50,23 +50,26 @@ class _LeaksPageState extends State<LeaksPage> {
   Widget build(BuildContext context) {
     final List<LeakModel>? leaks = context.watch<CorpController>().state!.leaks;
 
-    final filteredLeaks = leaks
-        ?.where(
-          (leak) =>
-              (_selectedDateRange == null ||
-                  (leak.date.isAfter(_selectedDateRange!.start) &&
-                      leak.date.isBefore(_selectedDateRange!.end))) &&
-              (_searchController.text.isEmpty ||
-                  leak.name.toLowerCase().contains(
-                    _searchController.text.toLowerCase(),
-                  ) ||
-                  leak.email.toLowerCase().contains(
-                    _searchController.text.toLowerCase(),
-                  )) &&
-              (_selectedStatuses.isEmpty ||
-                  _selectedStatuses.contains(leak.status)),
-        )
-        .toList();
+    final filteredLeaks = leaks?.where((leak) {
+      final inDateRange = _selectedDateRange == null
+          ? true
+          : !leak.date.isBefore(_selectedDateRange!.start) &&
+                !leak.date.isAfter(_selectedDateRange!.end);
+
+      final matchesSearch =
+          _searchController.text.isEmpty ||
+          leak.name.toLowerCase().contains(
+            _searchController.text.toLowerCase(),
+          ) ||
+          leak.email.toLowerCase().contains(
+            _searchController.text.toLowerCase(),
+          );
+
+      final matchesStatus =
+          _selectedStatuses.isEmpty || _selectedStatuses.contains(leak.status);
+
+      return inDateRange && matchesSearch && matchesStatus;
+    }).toList();
     return Column(
       children: <Widget>[
         SizedBox(
@@ -84,7 +87,15 @@ class _LeaksPageState extends State<LeaksPage> {
                   ..addAll(values);
               });
             },
-            onDateRangeFilterPressed: _setDateRange,
+            onDateRangeSelected: (start, end) {
+              setState(() {
+                if (start != null && end != null) {
+                  _selectedDateRange = DateTimeRange(start: start, end: end);
+                } else {
+                  _selectedDateRange = null;
+                }
+              });
+            },
           ),
         ),
         filteredLeaks == null || filteredLeaks.isEmpty
@@ -136,17 +147,5 @@ class _LeaksPageState extends State<LeaksPage> {
               ),
       ],
     );
-  }
-
-  void _setDateRange() async {
-    final DateTimeRange? picked = await showDateRangePicker(
-      context: context,
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2025),
-      initialDateRange: _selectedDateRange,
-    );
-    setState(() {
-      _selectedDateRange = picked;
-    });
   }
 }

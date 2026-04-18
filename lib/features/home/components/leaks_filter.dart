@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
+import 'package:n_leaks/features/home/components/date_filter_button.dart';
 import 'package:n_leaks/features/home/components/status_filter_button.dart';
-import 'package:n_leaks/features/home/widgets/filter_button.dart';
 
 class LeaksFilter extends StatefulWidget {
   const LeaksFilter({
@@ -13,7 +12,7 @@ class LeaksFilter extends StatefulWidget {
     this.statusOptions = const <String>[],
     this.selectedStatuses = const <String>{},
     this.onStatusSelectionChanged,
-    this.onDateRangeFilterPressed,
+    this.onDateRangeSelected,
   });
 
   final DateTimeRange? dateRange;
@@ -22,7 +21,7 @@ class LeaksFilter extends StatefulWidget {
   final List<String> statusOptions;
   final Set<String> selectedStatuses;
   final ValueChanged<List<String>>? onStatusSelectionChanged;
-  final Function()? onDateRangeFilterPressed;
+  final Function(DateTime?, DateTime?)? onDateRangeSelected;
 
   @override
   State<LeaksFilter> createState() => _LeaksFilterState();
@@ -76,11 +75,9 @@ class _LeaksFilterState extends State<LeaksFilter> {
                 },
               ),
               SizedBox(width: 18.w),
-              FilterButton(
-                text: widget.dateRange == null
-                    ? 'Time Range'
-                    : '${DateFormat('dd MMM yy').format(widget.dateRange!.start)} - ${DateFormat('dd MMM yy').format(widget.dateRange!.end)}',
-                onPressed: widget.onDateRangeFilterPressed,
+              DateFilterButton(
+                dateRange: widget.dateRange,
+                onDateRangeSelected: widget.onDateRangeSelected,
               ),
             ],
           ),
