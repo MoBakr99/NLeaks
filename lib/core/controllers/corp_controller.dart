@@ -25,7 +25,7 @@ class UpdateUserInfo extends AccountEvent {
 }
 
 class CorpController extends Bloc<AccountEvent, CorpModel?> {
-  CorpController() : super(null) {
+  CorpController([super.initialState]) {
     on<LogIn>((event, emit) {
       emit(event.account);
     });
