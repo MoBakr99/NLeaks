@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:n_leaks/core/controllers/corp_controller.dart';
+import 'package:n_leaks/features/home/widgets/add_user_widget.dart';
 import 'package:n_leaks/features/home/widgets/user_info_display.dart';
 
 class UsersAppBar extends StatelessWidget {
@@ -29,7 +30,12 @@ class UsersAppBar extends StatelessWidget {
       ),
       actions: [
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            showDialog<void>(
+              context: context,
+              builder: (_) => const AddNewUserDialog(),
+            );
+          },
           icon: Image.asset('assets/images/pngs/add_user_photo.png'),
         ),
       ],

@@ -37,5 +37,9 @@ class CorpController extends Bloc<AccountEvent, CorpModel?> {
     on<UpdateUserInfo>((event, emit) {
       emit(state?.copyWith(currentUser: event.updatedUserInfo));
     });
+
+    on<AddUser>((event, emit) {
+      emit(state?.copyWith(users: state!.users..add(event.newUser)));
+    });
   }
 }
