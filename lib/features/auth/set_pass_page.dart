@@ -83,7 +83,11 @@ class _SetPassPageState extends State<SetPassPage> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         // Handle forgot password logic here
-                        Navigator.pushReplacementNamed(context, loginRoute);
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          loginRoute,
+                          (route) => false,
+                        );
                       }
                     },
                     text: 'Submit',
