@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:n_leaks/core/constants/app_routes.dart';
 import 'package:n_leaks/core/controllers/corp_controller.dart';
 
 class SettingsAppBar extends StatelessWidget {
@@ -78,7 +79,10 @@ class SettingsPage extends StatelessWidget {
               color: Theme.of(context).colorScheme.tertiary,
             ),
             contentPadding: EdgeInsets.symmetric(horizontal: 30.w),
-            onTap: () {},
+            onTap: () {
+              // Handle sending verification code logic here
+              Navigator.pushNamed(context, verifyCodeRoute);
+            },
           ),
           if (role == 'Admin')
             ListTile(

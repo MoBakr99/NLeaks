@@ -83,10 +83,9 @@ class _SetPassPageState extends State<SetPassPage> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         // Handle forgot password logic here
-                        Navigator.pushNamedAndRemoveUntil(
+                        Navigator.popUntil(
                           context,
-                          loginRoute,
-                          (route) => false,
+                          (route) => route.isFirst,
                         );
                       }
                     },
