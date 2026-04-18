@@ -12,6 +12,13 @@ class DomainsInputField extends StatefulWidget {
 }
 
 class _DomainsInputFieldState extends State<DomainsInputField> {
+  late final List<String> _domains;
+  @override
+  void initState() {
+    super.initState();
+    _domains = List<String>.from(widget.domains);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -34,7 +41,7 @@ class _DomainsInputFieldState extends State<DomainsInputField> {
             runSpacing: 10.h,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: <Widget>[
-              ...widget.domains.map(
+              ..._domains.map(
                 (domain) => Container(
                   padding: EdgeInsets.symmetric(
                     horizontal: 15.w,
@@ -53,8 +60,7 @@ class _DomainsInputFieldState extends State<DomainsInputField> {
                       ),
                       SizedBox(width: 10.w),
                       InkWell(
-                        onTap: () =>
-                            setState(() => widget.domains.remove(domain)),
+                        onTap: () => setState(() => _domains.remove(domain)),
                         child: Icon(
                           Icons.close,
                           size: 15.sp,
@@ -72,13 +78,12 @@ class _DomainsInputFieldState extends State<DomainsInputField> {
                   cursorColor: Theme.of(context).colorScheme.primary,
                   onSubmitted: (value) {
                     final String normalized = value.trim().toLowerCase();
-                    if (normalized.isEmpty ||
-                        widget.domains.contains(normalized)) {
+                    if (normalized.isEmpty || _domains.contains(normalized)) {
                       widget.controller?.clear();
                       return;
                     }
                     setState(() {
-                      widget.domains.add(normalized);
+                      _domains.add(normalized);
                       widget.controller?.clear();
                     });
                   },
