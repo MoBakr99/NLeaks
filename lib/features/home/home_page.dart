@@ -161,7 +161,7 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-            const LeaksGraph(),
+            LeaksGraph(leaks: corpInfo.leaks ?? []),
           ],
         ),
       ),

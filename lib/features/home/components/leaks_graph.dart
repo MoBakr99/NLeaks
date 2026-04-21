@@ -2,25 +2,52 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:n_leaks/core/data/models/leak_model.dart';
 
 class LeaksGraph extends StatefulWidget {
-  const LeaksGraph({super.key});
+  const LeaksGraph({super.key, required this.leaks});
+
+  final List<LeakModel> leaks;
 
   @override
   State<LeaksGraph> createState() => _LeaksGraphState();
 }
 
 class _LeaksGraphState extends State<LeaksGraph> {
-  final List<String> _months = List.generate(
-    13,
-    (index) => DateFormat.MMM().format(DateTime(0, (index + 11) % 12 + 1)),
-  );
-
-  final List<double> _xLimits = [0, 12];
-  final List<double> _yLimits = [0, 50];
-
   @override
   Widget build(BuildContext context) {
+    final Map<DateTime, int> aggregatedLeaks = aggregateLeaksByMonth(
+      widget.leaks,
+    );
+    List<DateTime> months = aggregatedLeaks.keys.toList()
+      ..sort((a, b) => a.compareTo(b));
+    months = buildContinuousMonths(months);
+    final List<String> monthLabels = months
+        .map((month) => DateFormat('MMM yy').format(month))
+        .toList();
+    final List<FlSpot> spots = List<FlSpot>.generate(
+      months.length,
+      (index) => FlSpot(
+        index.toDouble(),
+        (aggregatedLeaks[months[index]] ?? 0).toDouble(),
+      ),
+    );
+    final int maxLeaks = aggregatedLeaks.values.isEmpty
+        ? 0
+        : aggregatedLeaks.values.reduce((a, b) => a > b ? a : b);
+    final double yInterval = maxLeaks <= 5
+        ? 1
+        : (maxLeaks / 5).ceil().toDouble();
+    final double maxY = maxLeaks == 0
+        ? 5
+        : ((maxLeaks / yInterval).ceil() * yInterval + yInterval).toDouble();
+    final double maxX = monthLabels.isEmpty
+        ? 1
+        : (monthLabels.length - 1).toDouble();
+    final double xInterval = monthLabels.length <= 6
+        ? 1
+        : (monthLabels.length / 6).ceilToDouble();
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       decoration: BoxDecoration(
@@ -39,10 +66,10 @@ class _LeaksGraphState extends State<LeaksGraph> {
             height: 300.h,
             child: LineChart(
               LineChartData(
-                minX: _xLimits[0],
-                maxX: _xLimits[1],
-                minY: _yLimits[0],
-                maxY: _yLimits[1],
+                minX: 0,
+                minY: 0,
+                maxX: maxX,
+                maxY: maxY,
                 lineTouchData: const LineTouchData(enabled: false),
                 borderData: FlBorderData(
                   show: true,
@@ -54,8 +81,8 @@ class _LeaksGraphState extends State<LeaksGraph> {
                 ),
                 gridData: FlGridData(
                   drawVerticalLine: true,
-                  horizontalInterval: 10,
-                  verticalInterval: 1,
+                  horizontalInterval: yInterval,
+                  verticalInterval: xInterval,
                   getDrawingHorizontalLine: (double value) {
                     return FlLine(
                       color: Theme.of(context).colorScheme.surface,
@@ -82,7 +109,7 @@ class _LeaksGraphState extends State<LeaksGraph> {
                     sideTitles: SideTitles(
                       showTitles: true,
                       reservedSize: 24.w,
-                      interval: 10,
+                      interval: yInterval,
                       getTitlesWidget: (double value, TitleMeta meta) {
                         return Text(
                           value.toInt().toString(),
@@ -95,18 +122,21 @@ class _LeaksGraphState extends State<LeaksGraph> {
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
-                      maxIncluded: _months.length.isOdd || _months.length < 7,
+                      maxIncluded:
+                          (monthLabels.length - 1) % xInterval == 0 ||
+                          monthLabels.length <= 10,
                       reservedSize: 28.h,
-                      interval: _months.length > 7 ? 2 : 1,
+                      interval: xInterval,
                       getTitlesWidget: (double value, TitleMeta meta) {
                         final int monthIndex = value.toInt();
-                        if (monthIndex < 0 || monthIndex >= _months.length) {
+                        if (monthIndex < 0 ||
+                            monthIndex >= monthLabels.length) {
                           return const SizedBox.shrink();
                         }
                         return Padding(
                           padding: EdgeInsets.only(top: 8.h),
                           child: Text(
-                            _months[monthIndex],
+                            monthLabels[monthIndex],
                             style: Theme.of(context).textTheme.labelMedium!
                                 .copyWith(fontWeight: FontWeight.w400),
                           ),
@@ -117,14 +147,7 @@ class _LeaksGraphState extends State<LeaksGraph> {
                 ),
                 lineBarsData: <LineChartBarData>[
                   LineChartBarData(
-                    spots: const <FlSpot>[
-                      FlSpot(1, 28),
-                      FlSpot(3, 32),
-                      FlSpot(5, 38),
-                      FlSpot(7, 39),
-                      FlSpot(9, 35),
-                      FlSpot(11, 18),
-                    ],
+                    spots: spots,
                     isCurved: true,
                     curveSmoothness: 0.4,
                     barWidth: 3.h,
@@ -158,5 +181,47 @@ class _LeaksGraphState extends State<LeaksGraph> {
         ],
       ),
     );
+  }
+
+  Map<DateTime, int> aggregateLeaksByMonth(List<LeakModel> leaks) {
+    final Map<DateTime, int> result = <DateTime, int>{};
+    for (final leak in leaks) {
+      final DateTime month = DateTime(leak.date.year, leak.date.month);
+      result.update(month, (value) => value + 1, ifAbsent: () => 1);
+    }
+    return result;
+  }
+
+  List<DateTime> buildContinuousMonths(List<DateTime> sortedMonths) {
+    if (sortedMonths.isEmpty) {
+      return <DateTime>[];
+    }
+
+    final DateTime firstMonth = DateTime(
+      sortedMonths.first.year,
+      sortedMonths.first.month,
+    );
+    final DateTime lastMonth = DateTime(
+      sortedMonths.last.year,
+      sortedMonths.last.month,
+    );
+
+    final List<DateTime> result = <DateTime>[];
+    DateTime cursor = firstMonth;
+    while (!cursor.isAfter(lastMonth)) {
+      result.add(cursor);
+      cursor = DateTime(cursor.year, cursor.month + 1);
+    }
+
+    return result;
+  }
+
+  Map<int, int> aggregateLeaksByYear(List<LeakModel> leaks) {
+    final Map<int, int> result = <int, int>{};
+    for (final leak in leaks) {
+      final int year = leak.date.year;
+      result.update(year, (value) => value + 1, ifAbsent: () => 1);
+    }
+    return result;
   }
 }
