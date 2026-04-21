@@ -35,18 +35,18 @@ class _LeaksGraphState extends State<LeaksGraph> {
     final int maxLeaks = aggregatedLeaks.values.isEmpty
         ? 0
         : aggregatedLeaks.values.reduce((a, b) => a > b ? a : b);
-    final double yInterval = maxLeaks <= 5
-        ? 1
-        : (maxLeaks / 5).ceil().toDouble();
-    final double maxY = maxLeaks == 0
-        ? 5
-        : ((maxLeaks / yInterval).ceil() * yInterval + yInterval).toDouble();
-    final double maxX = monthLabels.isEmpty
-        ? 1
-        : (monthLabels.length - 1).toDouble();
     final double xInterval = monthLabels.length <= 6
         ? 1
         : (monthLabels.length / 6).ceilToDouble();
+    final double yInterval = maxLeaks <= 5
+        ? 1
+        : (maxLeaks / 5).ceil().toDouble();
+    final double maxX = monthLabels.isEmpty
+        ? 1
+        : (monthLabels.length - 1).toDouble();
+    final double maxY = maxLeaks == 0
+        ? 5
+        : ((maxLeaks / yInterval).ceil() * yInterval + yInterval).toDouble();
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
