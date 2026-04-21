@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:n_leaks/core/constants/app_routes.dart';
@@ -176,6 +178,8 @@ class _LoginPageState extends State<LoginPage> {
     // Simulate login logic
 
     // Dummy Data
+    Random random = Random();
+
     final List<String> fNames = [
       'Ahmed',
       'Ezz',
@@ -184,7 +188,7 @@ class _LoginPageState extends State<LoginPage> {
       'Mohammad',
       'Mustafa',
       'Omar',
-    ];
+    ]..shuffle(random);
 
     final List<String> lNames = [
       'Adel',
@@ -196,13 +200,13 @@ class _LoginPageState extends State<LoginPage> {
       'Othman',
       'Ragab',
       'Yahia',
-    ];
+    ]..shuffle(random);
 
     final List<String> names = List.generate(
       30,
       (index) =>
-          '${fNames[index % fNames.length]} ${lNames[index % lNames.length]}',
-    )..shuffle();
+          '${fNames[random.nextInt(fNames.length)]} ${lNames[random.nextInt(lNames.length)]}',
+    );
 
     final List<String> positions = [
       'Backend Developer',
@@ -249,13 +253,18 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
       leaks: List.generate(
-        20,
+        100,
         (index) => LeakModel(
           id: '$index',
-          name: names.reversed.toList()[index],
-          email: '${names.reversed.toList()[index]}${index + 11}@acme.com',
-          date: DateTime(2024, 1, 22).add(Duration(days: index * 10)),
-          status: ['Active', 'Inactive', 'Unverified'][index % 3],
+          name: names.reversed.toList()[(index) % names.length],
+          email:
+              '${names.reversed.toList()[(index) % names.length]}${index + 11}@acme.com',
+          date: DateTime(
+            2025,
+            1,
+            22,
+          ).add(Duration(days: random.nextInt(50) * 10)),
+          status: ['Active', 'Inactive', 'Unverified'][random.nextInt(3)],
         ),
       ),
     );
