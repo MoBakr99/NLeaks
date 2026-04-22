@@ -8,6 +8,7 @@ class NamedTextField extends StatefulWidget {
     super.key,
     required this.name,
     this.hintText,
+    this.maxLength,
     this.controller,
     this.validator,
     this.keyboardType,
@@ -18,6 +19,7 @@ class NamedTextField extends StatefulWidget {
 
   final String name;
   final bool editable;
+  final int? maxLength;
   final String? hintText;
   final List<String> options;
   final bool visibilityButton;
@@ -57,6 +59,7 @@ class _NamedTextFieldState extends State<NamedTextField> {
           readOnly: !widget.editable || widget.options.isNotEmpty,
           keyboardType: widget.keyboardType,
           validator: _validatorPicker,
+          maxLength: widget.maxLength,
           cursorErrorColor: Theme.of(context).colorScheme.primary,
           style: widget.editable
               ? Theme.of(context).textTheme.bodySmall
@@ -72,6 +75,7 @@ class _NamedTextFieldState extends State<NamedTextField> {
                 context,
               ).colorScheme.tertiary.withValues(alpha: 0.7),
             ),
+            counterText: '',
             filled: true,
             fillColor: widget.editable
                 ? Theme.of(context).colorScheme.secondary

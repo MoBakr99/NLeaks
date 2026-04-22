@@ -129,17 +129,23 @@ class _LoginPageState extends State<LoginPage> {
                     },
                     text: 'Login',
                   ),
+                  SizedBox(height: 16.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        "Don't have an account?",
+                        "Don't have an account? ",
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                       TextButton(
                         onPressed: () {
                           Navigator.pushReplacementNamed(context, signupRoute);
                         },
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: const Size(0, 0),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
                         child: Text(
                           'Sign up',
                           style: Theme.of(context).textTheme.bodySmall!

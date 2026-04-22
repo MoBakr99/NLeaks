@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:n_leaks/core/constants/app_routes.dart';
 import 'package:n_leaks/core/widgets/named_text_field.dart';
 import 'package:n_leaks/features/auth/widgets/app_button.dart';
+import 'package:n_leaks/features/auth/widgets/timer_button.dart';
 
 class VerifyCodePage extends StatefulWidget {
   const VerifyCodePage({super.key});
@@ -76,24 +77,36 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
                   name: 'Enter Code',
                   hintText: 'Enter the code sent to your email',
                   controller: _codeController,
+                  maxLength: 6,
                 ),
               ),
+              SizedBox(height: 16.h),
               Row(
                 children: <Widget>[
                   Text(
-                    "Didn't receive a code?",
+                    "Didn't receive a code? ",
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
-                  TextButton(
+                  TimerButton(
                     onPressed: () {
-                      // TODO: Handle resend code logic here
+                      // Simulate resending the code
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Verification code resent!',
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                          ),
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.onSurface,
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
                     },
-                    child: Text(
-                      'Resend',
-                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        color: const Color(0xFFFF8682),
-                      ),
-                    ),
                   ),
                 ],
               ),

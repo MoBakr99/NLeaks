@@ -201,18 +201,23 @@ class _SignupPageState extends State<SignupPage> {
                     },
                     text: 'Create Account',
                   ),
-                  SizedBox(height: 4.h),
+                  SizedBox(height: 16.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        'Already have an account?',
+                        'Already have an account? ',
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                       TextButton(
                         onPressed: () {
                           Navigator.pushReplacementNamed(context, loginRoute);
                         },
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: const Size(0, 0),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
                         child: Text(
                           'Login',
                           style: Theme.of(context).textTheme.bodySmall!

@@ -67,7 +67,7 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Let’s get you all set up so you can access your personal account.',
+                  'Don’t worry, happens to all of us. Enter your email below to recover your password.',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
