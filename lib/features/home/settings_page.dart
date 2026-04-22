@@ -36,7 +36,7 @@ class SettingsPage extends StatelessWidget {
             ),
             contentPadding: EdgeInsets.symmetric(horizontal: 30.w),
             onTap: () {
-              Navigator.pushNamed(context, '/profile');
+              Navigator.pushNamed(context, profileRoute);
             },
           ),
           ListTile(
@@ -65,7 +65,7 @@ class SettingsPage extends StatelessWidget {
               ),
               contentPadding: EdgeInsets.symmetric(horizontal: 30.w),
               onTap: () {
-                Navigator.pushNamed(context, '/subscription');
+                Navigator.pushNamed(context, subscriptionRoute);
               },
             ),
           ListTile(

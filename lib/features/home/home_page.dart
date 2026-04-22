@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:n_leaks/core/constants/app_routes.dart';
 import 'package:n_leaks/core/controllers/corp_controller.dart';
 import 'package:n_leaks/core/data/models/corp_model.dart';
 import 'package:n_leaks/features/home/components/leaks_graph.dart';
@@ -22,7 +23,7 @@ class HomeAppBar extends StatelessWidget {
       ).colorScheme.surface.withValues(alpha: 0.8),
       title: InkWell(
         onTap: () {
-          Navigator.pushNamed(context, '/profile');
+          Navigator.pushNamed(context, profileRoute);
         },
         child: Row(
           spacing: 10.w,
