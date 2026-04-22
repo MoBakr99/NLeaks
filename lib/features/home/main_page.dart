@@ -31,7 +31,7 @@ class _MainPageState extends State<MainPage> {
         builder: (context, indexState) {
           return Scaffold(
             extendBody: true,
-            extendBodyBehindAppBar: indexState == 0,
+            extendBodyBehindAppBar: indexState == 0 || indexState == 2,
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(80.h),
               child: _pages[indexState][0],

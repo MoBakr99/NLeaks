@@ -11,8 +11,12 @@ class UsersAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      surfaceTintColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0.8),
+      surfaceTintColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0.8),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

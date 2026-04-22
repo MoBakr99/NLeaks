@@ -20,29 +20,33 @@ class HomeAppBar extends StatelessWidget {
       surfaceTintColor: Theme.of(
         context,
       ).colorScheme.surface.withValues(alpha: 0.8),
-      leadingWidth: 90.w,
-      leading: Center(
-        child: Padding(
-          padding: EdgeInsets.only(left: 20.w, top: 4.h),
-          child: CircleAvatar(
-            radius: 32.r,
-            backgroundImage: AssetImage(
-              context.watch<CorpController>().state!.currentUser.pictureUrl ??
-                  'assets/images/pngs/main_user_photo.png',
+      title: InkWell(
+        onTap: () {
+          Navigator.pushNamed(context, '/profile');
+        },
+        child: Row(
+          spacing: 10.w,
+          children: <Widget>[
+            CircleAvatar(
+              radius: 32.r,
+              backgroundImage: AssetImage(
+                context.watch<CorpController>().state!.currentUser.pictureUrl ??
+                    'assets/images/pngs/main_user_photo.png',
+              ),
             ),
-          ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Hello!', style: Theme.of(context).textTheme.titleSmall),
+                SizedBox(height: 5.h),
+                Text(
+                  context.watch<CorpController>().state!.currentUser.name,
+                  style: Theme.of(context).textTheme.displayMedium,
+                ),
+              ],
+            ),
+          ],
         ),
-      ),
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Hello!', style: Theme.of(context).textTheme.titleSmall),
-          SizedBox(height: 5.h),
-          Text(
-            context.watch<CorpController>().state!.currentUser.name,
-            style: Theme.of(context).textTheme.displayMedium,
-          ),
-        ],
       ),
       actions: [
         IconButton(
