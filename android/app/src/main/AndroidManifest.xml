@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="n_leaks"
+        android:label="N Leaks"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

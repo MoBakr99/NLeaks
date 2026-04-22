@@ -1,6 +1,6 @@
 name: n_leaks
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 
 version: 1.0.0+1
 
@@ -25,9 +25,14 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.14.4
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: assets/images/pngs/app_icon.png
 
 flutter:
-
   uses-material-design: true
 
   assets:

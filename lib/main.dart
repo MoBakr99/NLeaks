@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) => BlocProvider(
         create: (context) => CorpController(),
         child: MaterialApp(
-          title: 'Flutter Demo',
+          title: 'N Leaks',
           debugShowCheckedModeBanner: false,
           theme: appTheme,
           routes: appRoutes,
