@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:n_leaks/core/constants/app_routes.dart';
 import 'package:n_leaks/core/controllers/corp_controller.dart';
 import 'package:n_leaks/core/themes/theme.dart';
 import 'package:n_leaks/splash_screen.dart';
 
-void main() {
+void main() async {
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 

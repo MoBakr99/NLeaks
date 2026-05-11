@@ -1,17 +1,17 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:n_leaks/core/constants/app_routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:n_leaks/core/constants/app_routes.dart';
 import 'package:n_leaks/core/controllers/corp_controller.dart';
 import 'package:n_leaks/core/data/models/corp_model.dart';
 import 'package:n_leaks/core/data/models/leak_model.dart';
 import 'package:n_leaks/core/data/models/user_model.dart';
 import 'package:n_leaks/core/widgets/named_text_field.dart';
 import 'package:n_leaks/features/auth/widgets/app_button.dart';
-import 'package:n_leaks/features/auth/widgets/or_divider.dart';
-import 'package:n_leaks/features/auth/widgets/social_buttons.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -114,63 +114,24 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   SizedBox(height: 32.h),
                   AppButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
+                        final navigator = Navigator.of(context);
+                        final corpController = context.read<CorpController>();
                         // Perform login action
-                        final CorpModel? corp = _login(
+                        final CorpModel? corp = await _login(
                           _emailController.text,
                           _passController.text,
                         );
                         if (corp != null) {
-                          context.read<CorpController>().add(LogIn(corp));
-                          Navigator.pushReplacementNamed(context, homeRoute);
+                          corpController.add(LogIn(corp));
+                          navigator.pushReplacementNamed(homeRoute);
                         }
                       }
                     },
                     text: 'Login',
                   ),
-                  SizedBox(height: 16.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "Don't have an account? ",
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushReplacementNamed(context, signupRoute);
-                        },
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          minimumSize: const Size(0, 0),
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        child: Text(
-                          'Sign up',
-                          style: Theme.of(context).textTheme.bodySmall!
-                              .copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                                decoration: TextDecoration.underline,
-                                decorationColor: Theme.of(
-                                  context,
-                                ).colorScheme.primary,
-                              ),
-                        ),
-                      ),
-                    ],
-                  ),
                   SizedBox(height: 32.h),
-                  const OrDivider(login: true),
-                  SizedBox(height: 16.h),
-                  SocialButtons(
-                    assets: const <String>[
-                      'assets/images/svgs/facebook_logo.svg',
-                      'assets/images/svgs/google_logo.svg',
-                      'assets/images/svgs/apple_logo.svg',
-                    ],
-                    onPressed: <void Function()>[() {}, () {}, () {}],
-                  ),
                 ],
               ),
             ),
@@ -180,8 +141,58 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  CorpModel? _login(String email, String password) {
-    // Simulate login logic
+  Future<CorpModel?> _login(String email, String password) async {
+    final String baseUrl = dotenv.env['BASE_URL']!;
+    final String apiUrl = '$baseUrl/auth/login';
+
+    // Send POST request using Dio
+    late final Response response;
+    final dio = Dio();
+    try {
+      response = await dio.post(
+        apiUrl,
+        data: {'email': email, 'password': password},
+      );
+      if (mounted) {
+        await showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: Text('Response Status Code: ${response.statusCode}'),
+            content: Text('Response Body: ${response.data}'),
+            titleTextStyle: Theme.of(context).textTheme.titleLarge,
+            backgroundColor: Theme.of(context).colorScheme.onSurface,
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+      // print('Response Status Code: ${response.statusCode}');
+      // print('Response Body: ${response.data}');
+    } catch (error) {
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text('Login Failed'),
+            content: Text('Error: $error'),
+            titleTextStyle: Theme.of(context).textTheme.titleLarge,
+            backgroundColor: Theme.of(context).colorScheme.onSurface,
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+      // print('Error: $error');
+      return null;
+    }
 
     // Dummy Data
     Random random = Random();
