@@ -152,6 +152,10 @@ class _LoginPageState extends State<LoginPage> {
       response = await dio.post(
         apiUrl,
         data: {'email': email, 'password': password},
+        options: Options(
+          headers: {'Content-Type': 'application/json'},
+          validateStatus: (_) => true,
+        ),
       );
       if (mounted) {
         await showDialog(
@@ -169,6 +173,9 @@ class _LoginPageState extends State<LoginPage> {
             ],
           ),
         );
+      }
+      if (response.statusCode != 200) {
+        return null;
       }
       // print('Response Status Code: ${response.statusCode}');
       // print('Response Body: ${response.data}');
