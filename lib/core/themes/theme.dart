@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:n_leaks/core/constants/app_fonts.dart';
 import 'package:n_leaks/core/constants/app_colors.dart';
 
 ThemeData get appTheme => ThemeData(
@@ -18,40 +17,12 @@ ThemeData get appTheme => ThemeData(
     rangePickerHeaderForegroundColor: lightGrayColor,
   ),
   textTheme: TextTheme(
-    displayMedium: GoogleFonts.spaceGrotesk(
-      color: lightGrayColor,
-      fontSize: 32.sp,
-      fontWeight: FontWeight.w600,
-    ),
-    titleLarge: GoogleFonts.inter(
-      color: lightGrayColor,
-      fontSize: 24.sp,
-      fontWeight: FontWeight.w600,
-    ),
-    titleMedium: GoogleFonts.inter(
-      color: lightGrayColor,
-      fontSize: 20.sp,
-      fontWeight: FontWeight.w500,
-    ),
-    titleSmall: GoogleFonts.inter(
-      color: lightGrayColor,
-      fontSize: 18.sp,
-      fontWeight: FontWeight.w500,
-    ),
-    bodyMedium: GoogleFonts.inter(
-      color: lightGrayColor,
-      fontSize: 16.sp,
-      fontWeight: FontWeight.w400,
-    ),
-    bodySmall: GoogleFonts.inter(
-      color: lightGrayColor,
-      fontSize: 14.sp,
-      fontWeight: FontWeight.w400,
-    ),
-    labelMedium: GoogleFonts.inter(
-      color: lightGrayColor,
-      fontSize: 12.sp,
-      fontWeight: FontWeight.w500,
-    ),
+    displayMedium: grotesk32w600,
+    titleLarge: inter24w600,
+    titleMedium: inter20w500,
+    titleSmall: inter18w500,
+    bodyMedium: inter16w400,
+    bodySmall: inter14w400,
+    labelMedium: inter12w500,
   ),
 );

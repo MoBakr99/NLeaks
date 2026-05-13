@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_font_weights.dart';
 
 // TODO: Refactor this widget to follow the system design
 
@@ -230,10 +229,9 @@ class _CalendarDateRangeSelectorState extends State<CalendarDateRangeSelector> {
             onTap: _reset,
             child: Text(
               'Reset',
-              style: TextStyle(
-                color: primaryColor,
-                fontSize: 14.sp,
-                fontWeight: FontWeight.normal.semibold,
+              style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
@@ -247,11 +245,7 @@ class _CalendarDateRangeSelectorState extends State<CalendarDateRangeSelector> {
       onTap: onTap,
       child: Text(
         label,
-        style: TextStyle(
-          color: lightGrayColor,
-          fontSize: 13.sp,
-          fontWeight: FontWeight.normal.regular,
-        ),
+        style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 13.sp),
       ),
     );
   }
@@ -293,11 +287,9 @@ class _CalendarDateRangeSelectorState extends State<CalendarDateRangeSelector> {
         ),
         Text(
           _getMonthYear(),
-          style: TextStyle(
-            color: lightGrayColor,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.normal.semibold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),
         ),
         GestureDetector(
           onTap: _nextMonth,
@@ -341,10 +333,8 @@ class _CalendarDateRangeSelectorState extends State<CalendarDateRangeSelector> {
           child: Center(
             child: Text(
               day,
-              style: TextStyle(
-                color: mutedGrayColor,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.normal.medium,
+              style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                color: Theme.of(context).colorScheme.tertiaryFixed,
               ),
             ),
           ),
@@ -439,10 +429,10 @@ class _CalendarDateRangeSelectorState extends State<CalendarDateRangeSelector> {
         child: Center(
           child: Text(
             date.day.toString(),
-            style: TextStyle(
+            style: Theme.of(context).textTheme.labelMedium!.copyWith(
               color: textColor,
               fontSize: 13.sp,
-              fontWeight: FontWeight.normal.semibold,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),
