@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:n_leaks/core/constants/app_routes.dart';
+import 'package:n_leaks/core/services/auth_service.dart';
 import 'package:n_leaks/core/widgets/named_text_field.dart';
 import 'package:n_leaks/features/auth/controllers/timer_controller.dart';
 import 'package:n_leaks/features/auth/widgets/app_button.dart';
@@ -83,15 +84,19 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
               ),
               SizedBox(height: 24.h),
               AppButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    // Handle forgot password logic here
-                    if (context.read<TimerController>().state.inSeconds == 0) {
+                    final sent = await _sendOTP(_emailController.text.trim());
+                    if (sent && context.mounted) {
                       context.read<TimerController>().add(
                         StartTimer(const Duration(minutes: 1)),
                       );
+                      Navigator.pushReplacementNamed(
+                        context,
+                        verifyCodeRoute,
+                        arguments: _emailController.text.trim(),
+                      );
                     }
-                    Navigator.pushReplacementNamed(context, verifyCodeRoute);
                   }
                 },
                 text: 'Submit',
@@ -101,5 +106,54 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
         ),
       ),
     );
+  }
+
+  Future<bool> _sendOTP(String email) async {
+    try {
+      final response = await AuthService().sendOTP(email);
+      if (response.statusCode != 200 && mounted) {
+        showDialog(
+          context: context,
+          builder: (_) {
+            return AlertDialog(
+              title: const Text('Failed to send OTP'),
+              content: Text(
+                response.data['message'] ?? 'Check your email and try again.',
+              ),
+              titleTextStyle: Theme.of(context).textTheme.titleLarge,
+              backgroundColor: Theme.of(context).colorScheme.onSurface,
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+        return false;
+      }
+    } catch (e) {
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (_) {
+            return AlertDialog(
+              title: const Text('Failed to send OTP'),
+              content: Text('Error: $e'),
+              titleTextStyle: Theme.of(context).textTheme.titleLarge,
+              backgroundColor: Theme.of(context).colorScheme.onSurface,
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
+    return true;
   }
 }

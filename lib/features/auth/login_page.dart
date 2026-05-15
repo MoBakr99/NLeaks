@@ -1,8 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:n_leaks/core/constants/app_routes.dart';
@@ -10,6 +7,8 @@ import 'package:n_leaks/core/controllers/corp_controller.dart';
 import 'package:n_leaks/core/data/models/corp_model.dart';
 import 'package:n_leaks/core/data/models/leak_model.dart';
 import 'package:n_leaks/core/data/models/user_model.dart';
+import 'package:n_leaks/core/data/preferences/preference_manager.dart';
+import 'package:n_leaks/core/services/auth_service.dart';
 import 'package:n_leaks/core/widgets/named_text_field.dart';
 import 'package:n_leaks/features/auth/widgets/app_button.dart';
 
@@ -116,16 +115,13 @@ class _LoginPageState extends State<LoginPage> {
                   AppButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        final navigator = Navigator.of(context);
-                        final corpController = context.read<CorpController>();
-                        // Perform login action
                         final CorpModel? corp = await _login(
                           _emailController.text,
                           _passController.text,
                         );
-                        if (corp != null) {
-                          corpController.add(LogIn(corp));
-                          navigator.pushReplacementNamed(homeRoute);
+                        if (corp != null && context.mounted) {
+                          context.read<CorpController>().add(LogIn(corp));
+                          Navigator.pushReplacementNamed(context, homeRoute);
                         }
                       }
                     },
@@ -142,27 +138,21 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<CorpModel?> _login(String email, String password) async {
-    final String baseUrl = dotenv.env['BASE_URL']!;
-    final String apiUrl = '$baseUrl/auth/login';
-
-    // Send POST request using Dio
-    late final Response response;
-    final dio = Dio();
+    final Response userResponse;
+    final Response companyResponse;
+    final Response usersResponse;
+    final Response leaksResponse;
     try {
-      response = await dio.post(
-        apiUrl,
-        data: {'email': email, 'password': password},
-        options: Options(
-          headers: {'Content-Type': 'application/json'},
-          validateStatus: (_) => true,
-        ),
-      );
-      if (mounted) {
-        await showDialog(
+      userResponse = await AuthService().login(email, password);
+      if (userResponse.statusCode != 200 && mounted) {
+        showDialog(
           context: context,
           builder: (_) => AlertDialog(
-            title: Text('Response Status Code: ${response.statusCode}'),
-            content: Text('Response Body: ${response.data}'),
+            title: const Text('Login Failed'),
+            content: Text(
+              userResponse.data['message'] ??
+                  'Check your credentials and try again.',
+            ),
             titleTextStyle: Theme.of(context).textTheme.titleLarge,
             backgroundColor: Theme.of(context).colorScheme.onSurface,
             actions: [
@@ -173,12 +163,21 @@ class _LoginPageState extends State<LoginPage> {
             ],
           ),
         );
-      }
-      if (response.statusCode != 200) {
         return null;
       }
-      // print('Response Status Code: ${response.statusCode}');
-      // print('Response Body: ${response.data}');
+      companyResponse = await AuthService().getCompanyInfo(
+        userResponse.data['data']['access_token'],
+      );
+      usersResponse = await AuthService().getUsers(
+        userResponse.data['data']['access_token'],
+      );
+      leaksResponse = await AuthService().getLeaks(
+        userResponse.data['data']['access_token'],
+      );
+      await PreferenceManager().setString(
+        'access_token',
+        userResponse.data['data']['access_token'],
+      );
     } catch (error) {
       if (mounted) {
         showDialog(
@@ -197,98 +196,60 @@ class _LoginPageState extends State<LoginPage> {
           ),
         );
       }
-      // print('Error: $error');
       return null;
     }
 
-    // Dummy Data
-    Random random = Random();
-
-    final List<String> fNames = [
-      'Ahmed',
-      'Ezz',
-      'Fares',
-      'Mazen',
-      'Mohammad',
-      'Mustafa',
-      'Omar',
-    ]..shuffle(random);
-
-    final List<String> lNames = [
-      'Adel',
-      'Bakr',
-      'Daif',
-      'Farahat',
-      'Hasan',
-      'Nayel',
-      'Othman',
-      'Ragab',
-      'Yahia',
-    ]..shuffle(random);
-
-    final List<String> names = List.generate(
-      30,
-      (index) =>
-          '${fNames[random.nextInt(fNames.length)]} ${lNames[random.nextInt(lNames.length)]}',
-    );
-
-    final List<String> positions = [
-      'Backend Developer',
-      'Cybersecurity',
-      'Data Scientist',
-      'Flutter Developer',
-      'Frontend Developer',
-      'Product Manager',
-      'Software Engineer',
-      'UI/UX Designer',
-    ];
+    final user = userResponse.data['data']['user'];
 
     return CorpModel(
-      name: 'Acme Corporation',
-      logoUrl: 'assets/images/svgs/corporation_logo.svg',
-      contactEmail: 'security@acme.inc',
-      industry: 'Technology',
-      subscriptionDate: DateTime(2024, 1, 12),
-      subscriptionPlan: 'Pro',
-      subscriptionStatus: 'Active',
-      domains: ['acme.com', 'acme.inc', 'acme-labs.io'],
-      usersLimit: 130,
+      name: companyResponse.data['name'], // present
+      logoUrl: 'assets/images/svgs/corporation_logo.svg', // to be added later
+      contactEmail: '', // remove
+      industry: companyResponse.data['industry'] ?? 'Tech', // present
+      subscriptionDate: DateTime(2020), // not present
+      subscriptionPlan: companyResponse.data['subscriptionType'], // present
+      subscriptionStatus: '', // not present
+      domains: [companyResponse.data['domain']], // change to String
+      usersLimit: companyResponse.data['size'] ?? 130, // present
       currentUser: UserModel(
-        id: '22010232',
-        name: 'Mohammad Bakr',
-        username: 'MoBakr99',
-        email: email,
-        position: 'Software Engineer',
-        company: 'Acme Corporation',
-        pictureUrl: 'assets/images/pngs/main_user_photo.png',
-        role: 'Admin',
+        id: user['id'], // present
+        name: user['name'], // present
+        username: '', // remove
+        email: user['email'], // present
+        position: '', // not present
+        company: companyResponse.data['name'], // present
+        pictureUrl: 'assets/images/pngs/main_user_photo.png', // not present
+        role: List<String>.from(user['roles'])[0], // change to List<String>
+        gender: '', // not present
+        language: '', // not present
+        country: '', // not present
+        phoneNumber: '', // not present
       ),
-      users: List.generate(
-        30,
-        (index) => UserModel(
-          id: '${index + 22010201}',
-          name: names[index],
-          username: '${names[index]}_$index',
-          email: '${names[index]}${index + 11}@acme.com',
-          position: positions[index % positions.length],
-          company: 'Acme Corporation',
-          pictureUrl: 'assets/images/pngs/user_photo.png',
-          country: 'Egypt',
+      users: List<UserModel>.from(
+        usersResponse.data['data'].map(
+          (user) => UserModel(
+            id: user['id'], // present
+            name: user['name'], // present
+            username: '', // remove
+            email: user['email'], // present
+            position: '', // not present
+            company: companyResponse.data['name'], // present
+            pictureUrl: 'assets/images/pngs/user_photo.png', // not present
+            role: List<String>.from(user['roles'])[0], // change to List<String>
+          ),
         ),
       ),
-      leaks: List.generate(
-        100,
-        (index) => LeakModel(
-          id: '$index',
-          name: names.reversed.toList()[(index) % names.length],
-          email:
-              '${names.reversed.toList()[(index) % names.length]}${index + 11}@acme.com',
-          date: DateTime(
-            2025,
-            1,
-            22,
-          ).add(Duration(days: random.nextInt(50) * 10)),
-          status: ['Active', 'Inactive', 'Unverified'][random.nextInt(3)],
+      leaks: List<LeakModel>.from(
+        leaksResponse.data['data'].map(
+          (leak) => LeakModel(
+            id: leak['id'], // present
+            name: leak['username'], // present
+            email: leak['email'], // present
+            date: DateTime.parse(leak['source']['discoveredAt']), // present
+            status: 'Unverified', // not present
+            source: leak['source']['name'], // present
+            description: leak['source']['description'], // present
+          ),
         ),
       ),
     );

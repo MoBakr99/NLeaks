@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:n_leaks/core/constants/app_routes.dart';
 import 'package:n_leaks/core/controllers/corp_controller.dart';
+import 'package:n_leaks/core/data/models/user_model.dart';
+import 'package:n_leaks/core/services/auth_service.dart';
 import 'package:n_leaks/features/auth/controllers/timer_controller.dart';
 
 class SettingsAppBar extends StatelessWidget {
@@ -22,7 +24,7 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String role = context.watch<CorpController>().state!.currentUser.role;
+    final UserModel user = context.watch<CorpController>().state!.currentUser;
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -54,7 +56,7 @@ class SettingsPage extends StatelessWidget {
             contentPadding: EdgeInsets.symmetric(horizontal: 30.w),
             onTap: () {},
           ),
-          if (role == 'Admin')
+          if (user.role == 'ADMIN')
             ListTile(
               title: Text(
                 'Subscription',
@@ -82,16 +84,20 @@ class SettingsPage extends StatelessWidget {
             ),
             contentPadding: EdgeInsets.symmetric(horizontal: 30.w),
             onTap: () {
-              // Handle sending verification code logic here
               if (context.read<TimerController>().state.inSeconds == 0) {
+                AuthService().sendOTP(user.email);
                 context.read<TimerController>().add(
                   StartTimer(const Duration(minutes: 1)),
                 );
               }
-              Navigator.pushNamed(context, verifyCodeRoute);
+              Navigator.pushNamed(
+                context,
+                verifyCodeRoute,
+                arguments: user.email,
+              );
             },
           ),
-          if (role == 'Admin')
+          if (user.role == 'ADMIN')
             ListTile(
               title: Text(
                 'Add Payment Method',

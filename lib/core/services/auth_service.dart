@@ -53,4 +53,18 @@ class AuthService {
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
   }
+
+  Future<Response> sendOTP(String email) async {
+    return await _dio.post(
+      otpPath,
+      data: {'email': email},
+    );
+  }
+
+  Future<Response> verifyOTP(String email, String otp) async {
+    return await _dio.post(
+      verifyOtpPath,
+      data: {'email': email, 'otp': otp},
+    );
+  }
 }
