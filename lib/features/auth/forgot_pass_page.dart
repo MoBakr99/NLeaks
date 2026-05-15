@@ -3,8 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:n_leaks/core/constants/app_routes.dart';
 import 'package:n_leaks/core/widgets/named_text_field.dart';
 import 'package:n_leaks/features/auth/widgets/app_button.dart';
-import 'package:n_leaks/features/auth/widgets/or_divider.dart';
-import 'package:n_leaks/features/auth/widgets/social_buttons.dart';
 
 class ForgotPassPage extends StatefulWidget {
   const ForgotPassPage({super.key});
@@ -91,10 +89,6 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                 },
                 text: 'Submit',
               ),
-              SizedBox(height: 40.h),
-              const OrDivider(login: true),
-              SizedBox(height: 20.h),
-              SocialButtons(onPressed: [() {}, () {}, () {}]),
             ],
           ),
         ),

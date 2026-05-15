@@ -28,7 +28,7 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 270.h,
+      padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 15.w),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.secondary,
         borderRadius: BorderRadius.circular(12.r),
@@ -38,28 +38,23 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: 10.h,
           children: <Widget>[
-            SvgPicture.asset(
-              widget.corporationLogoPath,
-              height: 80.h,
-            ),
+            SvgPicture.asset(widget.corporationLogoPath, height: 80.h),
             Text(
               widget.corporationName,
               style: Theme.of(context).textTheme.displayMedium,
+              textAlign: TextAlign.center,
             ),
             Container(
-              width: 43.w,
-              height: 30.h,
+              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.circular(12.r),
               ),
-              child: Center(
-                child: Text(
-                  widget.subscriptionPlan,
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: Theme.of(context).colorScheme.surface,
-                    fontWeight: FontWeight.w700,
-                  ),
+              child: Text(
+                widget.subscriptionPlan,
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: Theme.of(context).colorScheme.surface,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ),
@@ -71,7 +66,9 @@ class _SubscriptionCardState extends State<SubscriptionCard> {
                 ).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w700),
                 children: [
                   TextSpan(
-                    text: DateFormat('MMM dd, yyyy').format(widget.subscriptionDate),
+                    text: DateFormat(
+                      'MMM dd, yyyy',
+                    ).format(widget.subscriptionDate),
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: Theme.of(context).colorScheme.tertiaryFixed,
                     ),
