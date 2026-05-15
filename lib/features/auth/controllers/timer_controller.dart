@@ -8,17 +8,16 @@ class StartTimer extends TimerEvent {
   StartTimer(this.duration);
 }
 
-class DecreaseTimer extends TimerEvent {}
-
 class TimerController extends Bloc<TimerEvent, Duration> {
-  TimerController([super.initialState = const Duration(minutes: 1)]) {
-    on<StartTimer>((event, emit) {
+  TimerController([super.initialState = const Duration(minutes: 0)]) {
+    on<StartTimer>((event, emit) async {
       emit(event.duration);
-    });
-
-    on<DecreaseTimer>((event, emit) {
-      if (state.inSeconds > 0) {
-        emit(state - const Duration(seconds: 1));
+      for (int i = 1; i <= event.duration.inSeconds; i++) {
+        await Future.delayed(const Duration(seconds: 1), () {
+          if (state.inSeconds > 0) {
+            emit(event.duration - Duration(seconds: i));
+          }
+        });
       }
     });
   }

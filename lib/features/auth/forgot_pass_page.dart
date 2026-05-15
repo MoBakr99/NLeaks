@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:n_leaks/core/constants/app_routes.dart';
 import 'package:n_leaks/core/widgets/named_text_field.dart';
+import 'package:n_leaks/features/auth/controllers/timer_controller.dart';
 import 'package:n_leaks/features/auth/widgets/app_button.dart';
 
 class ForgotPassPage extends StatefulWidget {
@@ -84,6 +86,11 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     // Handle forgot password logic here
+                    if (context.read<TimerController>().state.inSeconds == 0) {
+                      context.read<TimerController>().add(
+                        StartTimer(const Duration(minutes: 1)),
+                      );
+                    }
                     Navigator.pushReplacementNamed(context, verifyCodeRoute);
                   }
                 },

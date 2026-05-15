@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:n_leaks/core/constants/app_routes.dart';
 import 'package:n_leaks/core/controllers/corp_controller.dart';
+import 'package:n_leaks/features/auth/controllers/timer_controller.dart';
 
 class SettingsAppBar extends StatelessWidget {
   const SettingsAppBar({super.key});
@@ -82,6 +83,11 @@ class SettingsPage extends StatelessWidget {
             contentPadding: EdgeInsets.symmetric(horizontal: 30.w),
             onTap: () {
               // Handle sending verification code logic here
+              if (context.read<TimerController>().state.inSeconds == 0) {
+                context.read<TimerController>().add(
+                  StartTimer(const Duration(minutes: 1)),
+                );
+              }
               Navigator.pushNamed(context, verifyCodeRoute);
             },
           ),

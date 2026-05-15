@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:n_leaks/core/constants/app_routes.dart';
 import 'package:n_leaks/core/controllers/corp_controller.dart';
 import 'package:n_leaks/core/themes/theme.dart';
+import 'package:n_leaks/features/auth/controllers/timer_controller.dart';
 import 'package:n_leaks/splash_screen.dart';
 
 void main() async {
@@ -20,8 +21,11 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(440, 956),
       minTextAdapt: true,
-      builder: (context, child) => BlocProvider(
-        create: (context) => CorpController(),
+      builder: (context, child) => MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => CorpController()),
+          BlocProvider(create: (context) => TimerController()),
+        ],
         child: MaterialApp(
           title: 'N Leaks',
           debugShowCheckedModeBanner: false,
