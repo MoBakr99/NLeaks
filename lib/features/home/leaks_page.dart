@@ -20,6 +20,7 @@ class _LeaksAppBarState extends State<LeaksAppBar> {
     return AppBar(
       backgroundColor: Theme.of(context).colorScheme.surface,
       surfaceTintColor: Theme.of(context).colorScheme.surface,
+      toolbarHeight: 80.h,
       title: Text(
         'Leak Intelligence',
         style: Theme.of(context).textTheme.displayMedium,

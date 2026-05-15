@@ -32,118 +32,121 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   @override
   Widget build(BuildContext context) {
     final CorpModel corpInfo = context.watch<CorpController>().state!;
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Theme.of(
-          context,
-        ).colorScheme.surface.withValues(alpha: 0.8),
-        surfaceTintColor: Theme.of(
-          context,
-        ).colorScheme.surface.withValues(alpha: 0.8),
-        title: Text(
-          'Company Subscription',
-          style: Theme.of(context).textTheme.displayMedium,
-        ),
-        titleSpacing: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Theme.of(context).colorScheme.tertiary,
-            size: 25.sp,
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Theme.of(
+            context,
+          ).colorScheme.surface.withValues(alpha: 0.8),
+          surfaceTintColor: Theme.of(
+            context,
+          ).colorScheme.surface.withValues(alpha: 0.8),
+          title: Text(
+            'Company Subscription',
+            style: Theme.of(context).textTheme.displayMedium,
           ),
-          onPressed: () => Navigator.pop(context),
-          padding: EdgeInsets.only(left: 20.w),
-        ),
-        leadingWidth: 50.w,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.only(
-            left: 20.w,
-            right: 20.w,
-            top: 120.h,
-            bottom: 30.h,
+          titleSpacing: 0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Theme.of(context).colorScheme.tertiary,
+              size: 25.sp,
+            ),
+            onPressed: () => Navigator.pop(context),
+            padding: EdgeInsets.only(left: 20.w),
           ),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              spacing: 20.h,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SubscriptionCard(
-                  corporationLogoPath: corpInfo.logoUrl,
-                  corporationName: corpInfo.name,
-                  subscriptionPlan: corpInfo.subscriptionPlan,
-                  subscriptionDate: corpInfo.subscriptionDate,
-                  subscriptionStatus: corpInfo.subscriptionStatus,
-                ),
-                Text(
-                  'Company Information',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                NamedTextField(
-                  name: 'Company Name',
-                  controller: _fieldsControllers[0]..text = corpInfo.name,
-                ),
-                NamedTextField(
-                  name: 'Industry',
-                  controller: _fieldsControllers[1]..text = corpInfo.industry,
-                ),
-                NamedTextField(
-                  name: 'Expected User Count',
-                  controller: _fieldsControllers[2]
-                    ..text = corpInfo.usersLimit.toString(),
-                  keyboardType: TextInputType.number,
-                ),
-                NamedTextField(
-                  name: 'Admin Contact Email',
-                  controller: _fieldsControllers[3]
-                    ..text = corpInfo.contactEmail,
-                ),
-                DomainsInputField(
-                  domains: corpInfo.domains,
-                  controller: _fieldsControllers[4],
-                ),
-                Row(
-                  spacing: 10.w,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    AppMaterialButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          // Handle save as draft logic
-                        }
-                      },
-                      child: Text(
-                        'Save as Draft',
-                        style: Theme.of(context).textTheme.labelMedium,
+          leadingWidth: 50.w,
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: 20.w,
+              right: 20.w,
+              top: 120.h,
+              bottom: 30.h,
+            ),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                spacing: 20.h,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SubscriptionCard(
+                    corporationLogoPath: corpInfo.logoUrl,
+                    corporationName: corpInfo.name,
+                    subscriptionPlan: corpInfo.subscriptionPlan,
+                    subscriptionDate: corpInfo.subscriptionDate,
+                    subscriptionStatus: corpInfo.subscriptionStatus,
+                  ),
+                  Text(
+                    'Company Information',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  NamedTextField(
+                    name: 'Company Name',
+                    controller: _fieldsControllers[0]..text = corpInfo.name,
+                  ),
+                  NamedTextField(
+                    name: 'Industry',
+                    controller: _fieldsControllers[1]..text = corpInfo.industry,
+                  ),
+                  NamedTextField(
+                    name: 'Expected User Count',
+                    controller: _fieldsControllers[2]
+                      ..text = corpInfo.usersLimit.toString(),
+                    keyboardType: TextInputType.number,
+                  ),
+                  NamedTextField(
+                    name: 'Admin Contact Email',
+                    controller: _fieldsControllers[3]
+                      ..text = corpInfo.contactEmail,
+                  ),
+                  DomainsInputField(
+                    domains: corpInfo.domains,
+                    controller: _fieldsControllers[4],
+                  ),
+                  Row(
+                    spacing: 10.w,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      AppMaterialButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            // Handle save as draft logic
+                          }
+                        },
+                        child: Text(
+                          'Save as Draft',
+                          style: Theme.of(context).textTheme.labelMedium,
+                        ),
                       ),
-                    ),
-                    AppMaterialButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          // Handle send update request logic
-                        }
-                      },
-                      child: Row(
-                        spacing: 10.w,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          SvgPicture.asset(
-                            'assets/images/svgs/send_icon.svg',
-                            width: 15,
-                          ),
-                          Text(
-                            'Send Update Request',
-                            style: Theme.of(context).textTheme.labelMedium,
-                          ),
-                        ],
+                      AppMaterialButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            // Handle send update request logic
+                          }
+                        },
+                        child: Row(
+                          spacing: 10.w,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            SvgPicture.asset(
+                              'assets/images/svgs/send_icon.svg',
+                              width: 15,
+                            ),
+                            Text(
+                              'Send Update Request',
+                              style: Theme.of(context).textTheme.labelMedium,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -17,6 +17,7 @@ class UsersAppBar extends StatelessWidget {
       surfaceTintColor: Theme.of(
         context,
       ).colorScheme.surface.withValues(alpha: 0.8),
+      toolbarHeight: 80.h,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

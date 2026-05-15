@@ -29,15 +29,18 @@ class _MainPageState extends State<MainPage> {
       create: (context) => NavBarController(0),
       child: BlocBuilder<NavBarController, int>(
         builder: (context, indexState) {
-          return Scaffold(
-            extendBody: true,
-            extendBodyBehindAppBar: indexState == 0 || indexState == 2,
-            appBar: PreferredSize(
-              preferredSize: Size.fromHeight(80.h),
-              child: _pages[indexState][0],
+          return SafeArea(
+            top: false,
+            child: Scaffold(
+              extendBody: true,
+              extendBodyBehindAppBar: indexState == 0 || indexState == 2,
+              appBar: PreferredSize(
+                preferredSize: Size.fromHeight(80.h),
+                child: _pages[indexState][0],
+              ),
+              body: _pages[indexState][1],
+              bottomNavigationBar: const AppNavBar(),
             ),
-            body: _pages[indexState][1],
-            bottomNavigationBar: const AppNavBar(),
           );
         },
       ),

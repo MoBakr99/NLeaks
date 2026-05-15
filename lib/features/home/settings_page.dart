@@ -10,6 +10,7 @@ class SettingsAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      toolbarHeight: 80.h,
       title: Text('Settings', style: Theme.of(context).textTheme.displayMedium),
     );
   }
