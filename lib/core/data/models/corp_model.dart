@@ -4,12 +4,11 @@ import 'package:n_leaks/core/data/models/user_model.dart';
 class CorpModel {
   final String name;
   final String logoUrl;
-  final String contactEmail;
   final String industry;
   final DateTime subscriptionDate;
   final String subscriptionPlan;
   final String subscriptionStatus;
-  final List<String> domains;
+  final String domain;
   final int usersLimit;
   final UserModel currentUser;
   final List<UserModel> users;
@@ -18,12 +17,11 @@ class CorpModel {
   CorpModel({
     required this.name,
     required this.logoUrl,
-    required this.contactEmail,
     required this.industry,
     required this.subscriptionDate,
     required this.subscriptionPlan,
     required this.subscriptionStatus,
-    required this.domains,
+    required this.domain,
     required this.usersLimit,
     required this.currentUser,
     required this.users,
@@ -34,12 +32,11 @@ class CorpModel {
     return CorpModel(
       name: json['name'] as String,
       logoUrl: json['logoUrl'] as String,
-      contactEmail: json['contactEmail'] as String,
       industry: json['industry'] as String,
       subscriptionDate: DateTime.parse(json['subscriptionDate'] as String),
       subscriptionPlan: json['subscriptionPlan'] as String,
       subscriptionStatus: json['subscriptionStatus'] as String,
-      domains: List<String>.from(json['domains'] as List<dynamic>),
+      domain: json['domain'] as String,
       usersLimit: json['usersLimit'] as int,
       currentUser: UserModel.fromJson(
         json['currentUser'] as Map<String, dynamic>,
@@ -60,12 +57,11 @@ class CorpModel {
   CorpModel copyWith({
     String? name,
     String? logoUrl,
-    String? contactEmail,
     String? industry,
     DateTime? subscriptionDate,
     String? subscriptionPlan,
     String? subscriptionStatus,
-    List<String>? domains,
+    String? domain,
     int? usersLimit,
     UserModel? currentUser,
     List<UserModel>? users,
@@ -74,12 +70,11 @@ class CorpModel {
     return CorpModel(
       name: name ?? this.name,
       logoUrl: logoUrl ?? this.logoUrl,
-      contactEmail: contactEmail ?? this.contactEmail,
       industry: industry ?? this.industry,
       subscriptionDate: subscriptionDate ?? this.subscriptionDate,
       subscriptionPlan: subscriptionPlan ?? this.subscriptionPlan,
       subscriptionStatus: subscriptionStatus ?? this.subscriptionStatus,
-      domains: domains ?? this.domains,
+      domain: domain ?? this.domain,
       usersLimit: usersLimit ?? this.usersLimit,
       currentUser: currentUser ?? this.currentUser,
       users: users ?? this.users,
@@ -91,12 +86,11 @@ class CorpModel {
     return {
       'name': name,
       'logoUrl': logoUrl,
-      'contactEmail': contactEmail,
       'industry': industry,
       'subscriptionDate': subscriptionDate.toIso8601String(),
       'subscriptionPlan': subscriptionPlan,
       'subscriptionStatus': subscriptionStatus,
-      'domains': domains,
+      'domain': domain,
       'usersLimit': usersLimit,
       'currentUser': currentUser.toJson(),
       'users': users.map((user) => user.toJson()).toList(),

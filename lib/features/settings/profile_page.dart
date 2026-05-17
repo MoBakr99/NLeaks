@@ -18,7 +18,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final List<TextEditingController> _fieldsControllers = List.generate(
-    8,
+    7,
     (index) => TextEditingController(),
   );
 
@@ -93,30 +93,12 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           SizedBox(width: 22.w),
                           Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  user.name,
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.displayMedium,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                SizedBox(height: 5.h),
-                                Text(
-                                  user.username,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium!
-                                      .copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .tertiary
-                                            .withValues(alpha: 0.7),
-                                      ),
-                                ),
-                              ],
+                            child: Text(
+                              user.name,
+                              style: Theme.of(
+                                context,
+                              ).textTheme.displayMedium,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
@@ -136,21 +118,15 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       SizedBox(height: 10.h),
                       NamedTextField(
-                        name: 'Username',
-                        hintText: 'Your username',
-                        controller: _fieldsControllers[1]..text = user.username,
-                      ),
-                      SizedBox(height: 10.h),
-                      NamedTextField(
                         name: 'Gender',
-                        controller: _fieldsControllers[2]..text = user.gender,
+                        controller: _fieldsControllers[1]..text = user.gender,
                         options: const ['Male', 'Female'],
                       ),
                       SizedBox(height: 10.h),
                       NamedTextField(
                         name: 'Country',
                         hintText: 'Your country',
-                        controller: _fieldsControllers[3]
+                        controller: _fieldsControllers[2]
                           ..text = user.country ?? '',
                         validator: (value) => null,
                       ),
@@ -158,27 +134,27 @@ class _ProfilePageState extends State<ProfilePage> {
                       NamedTextField(
                         name: 'Phone Number',
                         hintText: 'Your phone number',
-                        controller: _fieldsControllers[4]
+                        controller: _fieldsControllers[3]
                           ..text = user.phoneNumber ?? '',
                         validator: (value) => null,
                       ),
                       SizedBox(height: 10.h),
                       NamedTextField(
                         name: 'Language',
-                        controller: _fieldsControllers[5]..text = user.language,
+                        controller: _fieldsControllers[4]..text = user.language,
                         options: const ['English', 'Arabic'],
                       ),
                       SizedBox(height: 10.h),
                       NamedTextField(
                         name: 'Position',
                         editable: false,
-                        controller: _fieldsControllers[6]..text = user.position,
+                        controller: _fieldsControllers[5]..text = user.position,
                       ),
                       SizedBox(height: 10.h),
                       NamedTextField(
                         name: 'Company',
                         editable: false,
-                        controller: _fieldsControllers[7]..text = user.company,
+                        controller: _fieldsControllers[6]..text = user.company,
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 15.h),
@@ -254,24 +230,22 @@ class _ProfilePageState extends State<ProfilePage> {
     if (_formKey.currentState!.validate()) {
       // Simulate saving the updated profile information to the server
       if (_fieldsControllers[0].text.trim() != user.name ||
-          _fieldsControllers[1].text.trim() != user.username ||
-          _fieldsControllers[2].text.trim() != user.gender ||
-          _fieldsControllers[3].text.trim() != (user.country ?? '') ||
-          _fieldsControllers[4].text.trim() != (user.phoneNumber ?? '') ||
-          _fieldsControllers[5].text.trim() != user.language) {
+          _fieldsControllers[1].text.trim() != user.gender ||
+          _fieldsControllers[2].text.trim() != (user.country ?? '') ||
+          _fieldsControllers[3].text.trim() != (user.phoneNumber ?? '') ||
+          _fieldsControllers[4].text.trim() != user.language) {
         context.read<CorpController>().add(
           UpdateUserInfo(
             user.copyWith(
               name: _fieldsControllers[0].text.trim(),
-              username: _fieldsControllers[1].text.trim(),
-              gender: _fieldsControllers[2].text.trim(),
-              country: _fieldsControllers[3].text.trim().isEmpty
+              gender: _fieldsControllers[1].text.trim(),
+              country: _fieldsControllers[2].text.trim().isEmpty
+                  ? null
+                  : _fieldsControllers[2].text.trim(),
+              phoneNumber: _fieldsControllers[3].text.trim().isEmpty
                   ? null
                   : _fieldsControllers[3].text.trim(),
-              phoneNumber: _fieldsControllers[4].text.trim().isEmpty
-                  ? null
-                  : _fieldsControllers[4].text.trim(),
-              language: _fieldsControllers[5].text.trim(),
+              language: _fieldsControllers[4].text.trim(),
             ),
           ),
         );

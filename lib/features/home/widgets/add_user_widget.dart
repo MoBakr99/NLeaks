@@ -21,7 +21,6 @@ class _AddNewUserDialogState extends State<AddNewUserDialog> {
     TextEditingController(),
     TextEditingController(),
     TextEditingController(),
-    TextEditingController(),
   ];
 
   @override
@@ -90,25 +89,20 @@ class _AddNewUserDialogState extends State<AddNewUserDialog> {
                         keyboardType: TextInputType.name,
                       ),
                       NamedTextField(
-                        name: 'Username',
-                        hintText: 'Enter user username',
-                        controller: _controllers[1],
-                      ),
-                      NamedTextField(
                         name: 'Email',
                         hintText: 'Enter user email',
-                        controller: _controllers[2],
+                        controller: _controllers[1],
                         keyboardType: TextInputType.emailAddress,
                       ),
                       NamedTextField(
                         name: 'Position',
                         hintText: 'Enter user position',
-                        controller: _controllers[3],
+                        controller: _controllers[2],
                       ),
                       NamedTextField(
                         name: 'Gender',
                         hintText: 'Enter user gender',
-                        controller: _controllers[4],
+                        controller: _controllers[3],
                         options: const ['Male', 'Female'],
                       ),
                     ],
@@ -154,11 +148,10 @@ class _AddNewUserDialogState extends State<AddNewUserDialog> {
                             id: DateTime.now().millisecondsSinceEpoch
                                 .toString(),
                             name: _controllers[0].text.trim(),
-                            username: _controllers[1].text.trim(),
-                            email: _controllers[2].text.trim(),
-                            position: _controllers[3].text.trim(),
+                            email: _controllers[1].text.trim(),
+                            position: _controllers[2].text.trim(),
                             company: context.read<CorpController>().state!.name,
-                            gender: _controllers[4].text.trim(),
+                            gender: _controllers[3].text.trim(),
                           ),
                         ),
                       );

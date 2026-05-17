@@ -69,17 +69,15 @@ class _SplashScreenState extends State<SplashScreen> {
     return CorpModel(
       name: companyResponse.data['name'], // present
       logoUrl: 'assets/images/svgs/corporation_logo.svg', // to be added later
-      contactEmail: '', // remove
       industry: companyResponse.data['industry'] ?? 'Tech', // present
       subscriptionDate: DateTime(2020), // not present
       subscriptionPlan: companyResponse.data['subscriptionType'], // present
       subscriptionStatus: '', // not present
-      domains: [companyResponse.data['domain']], // change to String
+      domain: companyResponse.data['domain'], // present
       usersLimit: companyResponse.data['size'] ?? 130, // present
       currentUser: UserModel(
         id: userResponse.data['id'], // present
         name: userResponse.data['name'], // present
-        username: '', // remove
         email: userResponse.data['email'], // present
         position: '', // not present
         company: companyResponse.data['name'], // present
@@ -97,7 +95,6 @@ class _SplashScreenState extends State<SplashScreen> {
           (user) => UserModel(
             id: user['id'], // present
             name: user['name'], // present
-            username: '', // remove
             email: user['email'], // present
             position: '', // not present
             company: companyResponse.data['name'], // present

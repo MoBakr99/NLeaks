@@ -1,7 +1,6 @@
 class UserModel {
   final String id;
   final String name;
-  final String username;
   final String email;
   final String? pictureUrl;
   final String role;
@@ -15,7 +14,6 @@ class UserModel {
   UserModel({
     required this.id,
     required this.name,
-    required this.username,
     required this.email,
     required this.position,
     required this.company,
@@ -31,7 +29,6 @@ class UserModel {
     return UserModel(
       id: json['id'] as String,
       name: json['name'] as String,
-      username: json['username'] as String,
       email: json['email'] as String,
       pictureUrl: json['profilePictureUrl'] as String?,
       role: json['role'] as String,
@@ -47,7 +44,6 @@ class UserModel {
   UserModel copyWith({
     String? id,
     String? name,
-    String? username,
     String? email,
     String? pictureUrl,
     String? role,
@@ -61,7 +57,6 @@ class UserModel {
     return UserModel(
       id: id ?? this.id,
       name: name ?? this.name,
-      username: username ?? this.username,
       email: email ?? this.email,
       pictureUrl: pictureUrl ?? this.pictureUrl,
       role: role ?? this.role,
@@ -78,7 +73,6 @@ class UserModel {
     return {
       'id': id,
       'name': name,
-      'username': username,
       'email': email,
       if (pictureUrl != null) 'profilePictureUrl': pictureUrl,
       'role': role,
