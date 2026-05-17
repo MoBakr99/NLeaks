@@ -48,4 +48,10 @@ class PreferenceManager {
   String? getString(String key) => _preferences.getString(key);
 
   List<String>? getStringList(String key) => _preferences.getStringList(key);
+
+  // Remover
+
+  Future<void> remove(String key) async {
+    await _preferences.remove(key);
+  }
 }
