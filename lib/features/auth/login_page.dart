@@ -174,10 +174,12 @@ class _LoginPageState extends State<LoginPage> {
       leaksResponse = await AuthService().getLeaks(
         userResponse.data['data']['access_token'],
       );
-      await PreferenceManager().setString(
-        'access_token',
-        userResponse.data['data']['access_token'],
-      );
+      if (_rememberUser == true) {
+        await PreferenceManager().setString(
+          'access_token',
+          userResponse.data['data']['access_token'],
+        );
+      }
     } catch (error) {
       if (mounted) {
         showDialog(
