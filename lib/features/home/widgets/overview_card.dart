@@ -21,33 +21,31 @@ class OverviewCard extends StatelessWidget {
     return Container(
       width: 175.w,
       height: 135.h,
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.secondary,
         borderRadius: BorderRadius.circular(14.r),
       ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(cardTitle, style: Theme.of(context).textTheme.titleMedium),
-            SizedBox(height: 10.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  cardValue,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleMedium!.copyWith(fontSize: 32.sp),
-                ),
-                const Spacer(),
-                SvgPicture.asset(cardIconPath, width: scaleUp ? 50.w : 35.w),
-              ],
-            ),
-          ],
-        ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(cardTitle, style: Theme.of(context).textTheme.titleMedium),
+          SizedBox(height: 10.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                cardValue,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium!.copyWith(fontSize: 32.sp),
+              ),
+              const Spacer(),
+              SvgPicture.asset(cardIconPath, width: scaleUp ? 50.w : 35.w),
+            ],
+          ),
+        ],
       ),
     );
   }

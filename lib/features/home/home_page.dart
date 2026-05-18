@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> {
         'iconPath': 'assets/images/svgs/warning_icon.svg',
       },
       {
-        'title': 'High Risk Leaks',
+        'title': 'Severe Leaks',
         'value':
             corpInfo.leaks
                 ?.where((leak) => leak.status == 'Active')
