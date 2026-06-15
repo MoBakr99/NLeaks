@@ -210,8 +210,8 @@ class _LoginPageState extends State<LoginPage> {
       subscriptionDate: DateTime(2020), // not present
       subscriptionPlan: companyResponse.data['subscriptionType'], // present
       subscriptionStatus: '', // not present
-      domain: companyResponse.data['domain'], // present
-      usersLimit: companyResponse.data['size'] ?? 130, // present
+      domains: List<String>.from(companyResponse.data['domains'] as List<dynamic>), // present
+      usersLimit: 130, // present
       currentUser: UserModel(
         id: user['id'], // present
         name: user['name'], // present

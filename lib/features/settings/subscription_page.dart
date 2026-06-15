@@ -6,6 +6,7 @@ import 'package:n_leaks/core/controllers/corp_controller.dart';
 import 'package:n_leaks/core/data/models/corp_model.dart';
 import 'package:n_leaks/core/widgets/named_text_field.dart';
 import 'package:n_leaks/core/widgets/subscription_card.dart';
+import 'package:n_leaks/features/settings/components/domains_input_field.dart';
 import 'package:n_leaks/features/settings/widgets/app_material_button.dart';
 
 class SubscriptionPage extends StatefulWidget {
@@ -92,14 +93,14 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                     controller: _fieldsControllers[1]..text = corpInfo.industry,
                   ),
                   NamedTextField(
-                    name: 'Domain',
-                    controller: _fieldsControllers[2]..text = corpInfo.domain,
-                  ),
-                  NamedTextField(
                     name: 'Expected User Count',
-                    controller: _fieldsControllers[3]
+                    controller: _fieldsControllers[2]
                       ..text = corpInfo.usersLimit.toString(),
                     keyboardType: TextInputType.number,
+                  ),
+                  DomainsInputField(
+                    domains: corpInfo.domains,
+                    controller: _fieldsControllers[3],
                   ),
                   Row(
                     spacing: 10.w,
