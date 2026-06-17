@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:n_leaks/core/controllers/corp_controller.dart';
+import 'package:n_leaks/core/controllers/token_controller.dart';
 import 'package:n_leaks/core/data/models/leak_model.dart';
+import 'package:n_leaks/core/services/api_service.dart';
 import 'package:n_leaks/features/home/widgets/leak_status_widget.dart';
 import 'package:n_leaks/features/home/components/leaks_filter.dart';
 import 'package:n_leaks/features/home/widgets/user_info_display.dart';
@@ -41,6 +42,28 @@ class _LeaksPageState extends State<LeaksPage> {
   final TextEditingController _searchController = TextEditingController();
   final Set<String> _selectedStatuses = <String>{};
 
+  Future<List<LeakModel>?> _fetchLeaks() async {
+    final response = await APIService().getLeaks(
+      context.read<TokenController>().state!,
+      limit: 100,
+    );
+    return List<LeakModel>.from(
+      response.data['data'].map(
+        (leak) => LeakModel(
+          name: leak['username'],
+          email: leak['email'],
+          password: leak['password'],
+          severity: leak['severity'],
+          detectionDate: DateTime.parse(leak['source']['discoveredAt']),
+          verificationDate: leak['verifiedAt'] != null
+              ? DateTime.parse(leak['verifiedAt'])
+              : null,
+          source: leak['source']['name'],
+        ),
+      ),
+    );
+  }
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -49,28 +72,6 @@ class _LeaksPageState extends State<LeaksPage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<LeakModel>? leaks = context.watch<CorpController>().state!.leaks;
-
-    final filteredLeaks = leaks?.where((leak) {
-      final inDateRange = _selectedDateRange == null
-          ? true
-          : !leak.date.isBefore(_selectedDateRange!.start) &&
-                !leak.date.isAfter(_selectedDateRange!.end);
-
-      final matchesSearch =
-          _searchController.text.isEmpty ||
-          leak.name.toLowerCase().contains(
-            _searchController.text.toLowerCase(),
-          ) ||
-          leak.email.toLowerCase().contains(
-            _searchController.text.toLowerCase(),
-          );
-
-      final matchesStatus =
-          _selectedStatuses.isEmpty || _selectedStatuses.contains(leak.status);
-
-      return inDateRange && matchesSearch && matchesStatus;
-    }).toList();
     return Column(
       children: <Widget>[
         SizedBox(
@@ -79,7 +80,7 @@ class _LeaksPageState extends State<LeaksPage> {
             dateRange: _selectedDateRange,
             searchController: _searchController,
             onSearchChanged: (value) => setState(() {}),
-            statusOptions: const ['Unverified', 'Active', 'Inactive'],
+            statusOptions: const ['critical', 'high', 'medium', 'low'],
             selectedStatuses: _selectedStatuses,
             onStatusSelectionChanged: (values) {
               setState(() {
@@ -99,53 +100,94 @@ class _LeaksPageState extends State<LeaksPage> {
             },
           ),
         ),
-        filteredLeaks == null || filteredLeaks.isEmpty
-            ? Expanded(
+        FutureBuilder(
+          future: _fetchLeaks(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Expanded(
+                child: Center(child: CircularProgressIndicator()),
+              );
+            } else if (snapshot.hasError) {
+              return Expanded(
+                child: Center(
+                  child: Text(
+                    'Error: ${snapshot.error}',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
+              );
+            }
+
+            final leaks = snapshot.data!;
+
+            final filteredLeaks = leaks.where((leak) {
+              final inDateRange = _selectedDateRange == null
+                  ? true
+                  : !leak.detectionDate.isBefore(_selectedDateRange!.start) &&
+                        !leak.detectionDate.isAfter(_selectedDateRange!.end);
+
+              final matchesSearch =
+                  _searchController.text.isEmpty ||
+                  leak.name.toLowerCase().contains(
+                    _searchController.text.toLowerCase(),
+                  ) ||
+                  leak.email.toLowerCase().contains(
+                    _searchController.text.toLowerCase(),
+                  );
+
+              final matchesStatus =
+                  _selectedStatuses.isEmpty ||
+                  _selectedStatuses.contains(leak.severity);
+
+              return inDateRange && matchesSearch && matchesStatus;
+            }).toList();
+
+            if (filteredLeaks.isEmpty) {
+              return Expanded(
                 child: Center(
                   child: Text(
                     'No leaks found for the selected filters.',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
-              )
-            : Expanded(
-                child: ListView.builder(
-                  itemCount: filteredLeaks.length,
-                  itemBuilder: (context, index) {
-                    final leak = filteredLeaks[index];
-                    return Container(
-                      height: 80.h,
-                      padding: EdgeInsets.only(left: 16.w),
-                      margin: EdgeInsets.symmetric(
-                        horizontal: 10.w,
-                        vertical: 5.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        borderRadius: BorderRadius.circular(15.r),
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: UserInfoDisplay(
-                              name: leak.name,
-                              email: leak.email,
-                            ),
+              );
+            }
+            return Expanded(
+              child: ListView.builder(
+                itemCount: filteredLeaks.length,
+                itemBuilder: (context, index) {
+                  final leak = filteredLeaks[index];
+                  return Container(
+                    height: 80.h,
+                    padding: EdgeInsets.only(left: 16.w),
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 5.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      borderRadius: BorderRadius.circular(15.r),
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: UserInfoDisplay(
+                            name: leak.name,
+                            email: leak.email,
                           ),
-                          LeakStatusWidget(status: leak.status),
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.more_vert,
-                              color: Theme.of(context).colorScheme.tertiary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: LeakStatusWidget(status: leak.severity),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
+            );
+          },
+        ),
       ],
     );
   }

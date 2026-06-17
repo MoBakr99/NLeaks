@@ -4,11 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:n_leaks/core/constants/app_routes.dart';
 import 'package:n_leaks/core/controllers/corp_controller.dart';
+import 'package:n_leaks/core/controllers/token_controller.dart';
 import 'package:n_leaks/core/data/models/corp_model.dart';
-import 'package:n_leaks/core/data/models/leak_model.dart';
 import 'package:n_leaks/core/data/models/user_model.dart';
 import 'package:n_leaks/core/data/preferences/preference_manager.dart';
-import 'package:n_leaks/core/services/auth_service.dart';
+import 'package:n_leaks/core/services/api_service.dart';
 import 'package:n_leaks/core/widgets/named_text_field.dart';
 import 'package:n_leaks/features/auth/widgets/app_button.dart';
 
@@ -140,10 +140,10 @@ class _LoginPageState extends State<LoginPage> {
   Future<CorpModel?> _login(String email, String password) async {
     final Response userResponse;
     final Response companyResponse;
-    final Response usersResponse;
-    final Response leaksResponse;
+    final String accessToken;
+
     try {
-      userResponse = await AuthService().login(email, password);
+      userResponse = await APIService().login(email, password);
       if (userResponse.statusCode != 200 && mounted) {
         showDialog(
           context: context,
@@ -165,20 +165,13 @@ class _LoginPageState extends State<LoginPage> {
         );
         return null;
       }
-      companyResponse = await AuthService().getCompanyInfo(
-        userResponse.data['data']['access_token'],
-      );
-      usersResponse = await AuthService().getUsers(
-        userResponse.data['data']['access_token'],
-      );
-      leaksResponse = await AuthService().getLeaks(
-        userResponse.data['data']['access_token'],
-      );
+      accessToken = userResponse.data['data']['access_token'];
+      companyResponse = await APIService().getCompanyInfo(accessToken);
+      if (mounted) {
+        context.read<TokenController>().add(SetToken(accessToken));
+      }
       if (_rememberUser == true) {
-        await PreferenceManager().setString(
-          'access_token',
-          userResponse.data['data']['access_token'],
-        );
+        await PreferenceManager().setString('access_token', accessToken);
       }
     } catch (error) {
       if (mounted) {
@@ -207,50 +200,26 @@ class _LoginPageState extends State<LoginPage> {
       name: companyResponse.data['name'], // present
       logoUrl: 'assets/images/svgs/corporation_logo.svg', // to be added later
       industry: companyResponse.data['industry'] ?? 'Tech', // present
-      subscriptionDate: DateTime(2020), // not present
+      subscriptionDate: DateTime.parse(
+        companyResponse.data['createdAt'],
+      ), // present
+      subscriptionEndDate: DateTime.parse(
+        companyResponse.data['subscriptionEndsAt'],
+      ), // present
       subscriptionPlan: companyResponse.data['subscriptionType'], // present
-      subscriptionStatus: '', // not present
-      domains: List<String>.from(companyResponse.data['domains'] as List<dynamic>), // present
-      usersLimit: 130, // present
+      subscriptionStatus: companyResponse.data['status'], // present
+      domains: List<String>.from(
+        companyResponse.data['domains'] as List<dynamic>,
+      ), // present
       currentUser: UserModel(
-        id: user['id'], // present
         name: user['name'], // present
         email: user['email'], // present
-        position: '', // not present
         company: companyResponse.data['name'], // present
-        pictureUrl: 'assets/images/pngs/main_user_photo.png', // not present
-        role: List<String>.from(user['roles'])[0], // change to List<String>
-        gender: '', // not present
-        language: '', // not present
-        country: '', // not present
-        phoneNumber: '', // not present
+        roles: List<String>.from(user['roles']), // present
       ),
-      users: List<UserModel>.from(
-        usersResponse.data['data'].map(
-          (user) => UserModel(
-            id: user['id'], // present
-            name: user['name'], // present
-            email: user['email'], // present
-            position: '', // not present
-            company: companyResponse.data['name'], // present
-            pictureUrl: 'assets/images/pngs/user_photo.png', // not present
-            role: List<String>.from(user['roles'])[0], // change to List<String>
-          ),
-        ),
-      ),
-      leaks: List<LeakModel>.from(
-        leaksResponse.data['data'].map(
-          (leak) => LeakModel(
-            id: leak['id'], // present
-            name: leak['username'], // present
-            email: leak['email'], // present
-            date: DateTime.parse(leak['source']['discoveredAt']), // present
-            status: 'Unverified', // not present
-            source: leak['source']['name'], // present
-            description: leak['source']['description'], // present
-          ),
-        ),
-      ),
+      users: companyResponse.data['users'].length, // present
+      // leaks: leaksResponse.data['total'], // present
+      leaks: companyResponse.data['_count']['breachData'], // present
     );
   }
 }

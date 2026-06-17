@@ -6,7 +6,7 @@ import 'package:n_leaks/core/constants/app_routes.dart';
 import 'package:n_leaks/core/controllers/corp_controller.dart';
 import 'package:n_leaks/core/data/models/user_model.dart';
 import 'package:n_leaks/core/data/preferences/preference_manager.dart';
-import 'package:n_leaks/core/services/auth_service.dart';
+import 'package:n_leaks/core/services/api_service.dart';
 import 'package:n_leaks/features/auth/controllers/timer_controller.dart';
 
 class SettingsAppBar extends StatelessWidget {
@@ -58,7 +58,7 @@ class SettingsPage extends StatelessWidget {
             contentPadding: EdgeInsets.symmetric(horizontal: 30.w),
             onTap: () {},
           ),
-          if (user.role == 'ADMIN')
+          if (user.roles.contains('ADMIN'))
             ListTile(
               title: Text(
                 'Subscription',
@@ -87,7 +87,7 @@ class SettingsPage extends StatelessWidget {
             contentPadding: EdgeInsets.symmetric(horizontal: 30.w),
             onTap: () {
               if (context.read<TimerController>().state.inSeconds == 0) {
-                AuthService().sendOTP(user.email);
+                APIService().sendOTP(user.email);
                 context.read<TimerController>().add(
                   StartTimer(const Duration(minutes: 1)),
                 );
@@ -99,7 +99,7 @@ class SettingsPage extends StatelessWidget {
               );
             },
           ),
-          if (user.role == 'ADMIN')
+          if (user.roles.contains('ADMIN'))
             ListTile(
               title: Text(
                 'Add Payment Method',

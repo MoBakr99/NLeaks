@@ -19,7 +19,7 @@ class SubscriptionPage extends StatefulWidget {
 class _SubscriptionPageState extends State<SubscriptionPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final List<TextEditingController> _fieldsControllers = List.generate(
-    4,
+    3,
     (index) => TextEditingController(),
   );
 
@@ -92,15 +92,9 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                     name: 'Industry',
                     controller: _fieldsControllers[1]..text = corpInfo.industry,
                   ),
-                  NamedTextField(
-                    name: 'Expected User Count',
-                    controller: _fieldsControllers[2]
-                      ..text = corpInfo.usersLimit.toString(),
-                    keyboardType: TextInputType.number,
-                  ),
                   DomainsInputField(
                     domains: corpInfo.domains,
-                    controller: _fieldsControllers[3],
+                    controller: _fieldsControllers[2],
                   ),
                   Row(
                     spacing: 10.w,

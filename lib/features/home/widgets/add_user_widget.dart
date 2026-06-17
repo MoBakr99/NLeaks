@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:n_leaks/core/controllers/corp_controller.dart';
-import 'package:n_leaks/core/data/models/user_model.dart';
 import 'package:n_leaks/core/widgets/named_text_field.dart';
 import 'package:n_leaks/features/settings/widgets/app_material_button.dart';
 
@@ -17,7 +14,6 @@ class AddNewUserDialog extends StatefulWidget {
 class _AddNewUserDialogState extends State<AddNewUserDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final List<TextEditingController> _controllers = [
-    TextEditingController(),
     TextEditingController(),
     TextEditingController(),
     TextEditingController(),
@@ -95,15 +91,9 @@ class _AddNewUserDialogState extends State<AddNewUserDialog> {
                         keyboardType: TextInputType.emailAddress,
                       ),
                       NamedTextField(
-                        name: 'Position',
-                        hintText: 'Enter user position',
+                        name: 'Role',
+                        hintText: 'Enter user role',
                         controller: _controllers[2],
-                      ),
-                      NamedTextField(
-                        name: 'Gender',
-                        hintText: 'Enter user gender',
-                        controller: _controllers[3],
-                        options: const ['Male', 'Female'],
                       ),
                     ],
                   ),
@@ -142,19 +132,6 @@ class _AddNewUserDialogState extends State<AddNewUserDialog> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       // Simulate sending invitation to the server
-                      context.read<CorpController>().add(
-                        AddUser(
-                          UserModel(
-                            id: DateTime.now().millisecondsSinceEpoch
-                                .toString(),
-                            name: _controllers[0].text.trim(),
-                            email: _controllers[1].text.trim(),
-                            position: _controllers[2].text.trim(),
-                            company: context.read<CorpController>().state!.name,
-                            gender: _controllers[3].text.trim(),
-                          ),
-                        ),
-                      );
                       Navigator.of(context).pop();
                     }
                   },

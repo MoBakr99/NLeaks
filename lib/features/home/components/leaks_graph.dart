@@ -186,7 +186,10 @@ class _LeaksGraphState extends State<LeaksGraph> {
   Map<DateTime, int> aggregateLeaksByMonth(List<LeakModel> leaks) {
     final Map<DateTime, int> result = <DateTime, int>{};
     for (final leak in leaks) {
-      final DateTime month = DateTime(leak.date.year, leak.date.month);
+      final DateTime month = DateTime(
+        leak.detectionDate.year,
+        leak.detectionDate.month,
+      );
       result.update(month, (value) => value + 1, ifAbsent: () => 1);
     }
     return result;
@@ -219,7 +222,7 @@ class _LeaksGraphState extends State<LeaksGraph> {
   Map<int, int> aggregateLeaksByYear(List<LeakModel> leaks) {
     final Map<int, int> result = <int, int>{};
     for (final leak in leaks) {
-      final int year = leak.date.year;
+      final int year = leak.detectionDate.year;
       result.update(year, (value) => value + 1, ifAbsent: () => 1);
     }
     return result;

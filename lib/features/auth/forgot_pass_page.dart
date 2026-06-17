@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:n_leaks/core/constants/app_routes.dart';
-import 'package:n_leaks/core/services/auth_service.dart';
+import 'package:n_leaks/core/services/api_service.dart';
 import 'package:n_leaks/core/widgets/named_text_field.dart';
 import 'package:n_leaks/features/auth/controllers/timer_controller.dart';
 import 'package:n_leaks/features/auth/widgets/app_button.dart';
@@ -110,7 +110,7 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
 
   Future<bool> _sendOTP(String email) async {
     try {
-      final response = await AuthService().sendOTP(email);
+      final response = await APIService().sendOTP(email);
       if (response.statusCode != 200 && mounted) {
         showDialog(
           context: context,

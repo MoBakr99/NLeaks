@@ -5,18 +5,12 @@ import 'package:n_leaks/core/data/models/user_model.dart';
 abstract class AccountEvent {}
 
 class LogIn extends AccountEvent {
-  final CorpModel account;
+  final CorpModel? account;
 
   LogIn(this.account);
 }
 
 class LogOut extends AccountEvent {}
-
-class AddUser extends AccountEvent {
-  final UserModel newUser;
-
-  AddUser(this.newUser);
-}
 
 class UpdateUserInfo extends AccountEvent {
   final UserModel updatedUserInfo;
@@ -36,10 +30,6 @@ class CorpController extends Bloc<AccountEvent, CorpModel?> {
 
     on<UpdateUserInfo>((event, emit) {
       emit(state?.copyWith(currentUser: event.updatedUserInfo));
-    });
-
-    on<AddUser>((event, emit) {
-      emit(state?.copyWith(users: state!.users..add(event.newUser)));
     });
   }
 }

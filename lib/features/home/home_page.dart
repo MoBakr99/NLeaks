@@ -4,8 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:n_leaks/core/constants/app_routes.dart';
 import 'package:n_leaks/core/controllers/corp_controller.dart';
+import 'package:n_leaks/core/controllers/token_controller.dart';
 import 'package:n_leaks/core/data/models/corp_model.dart';
-import 'package:n_leaks/features/home/components/leaks_graph.dart';
+import 'package:n_leaks/core/services/api_service.dart';
+// import 'package:n_leaks/features/home/components/leaks_graph.dart';
 import 'package:n_leaks/core/widgets/subscription_card.dart';
 import 'package:n_leaks/features/home/widgets/overview_card.dart';
 
@@ -71,32 +73,39 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  @override
-  Widget build(BuildContext context) {
-    final CorpModel corpInfo = context.watch<CorpController>().state!;
-    final List<Map<String, String>> overviewDataCards = [
+  Future<List<Map<String, String>>> _overviewCardsData(
+    int users,
+    int leaks,
+  ) async {
+    final response = await APIService().getLeaks(
+      context.read<TokenController>().state!,
+    );
+    final criticalLeaks = List.from(
+      response.data['data'].where((leak) => leak['severity'] == 'critical'),
+    ).length;
+    return [
       {
         'title': 'Total Users',
-        'value': corpInfo.users.length.toString(),
+        'value': users.toString(),
         'iconPath': 'assets/images/svgs/users_card_icon.svg',
         'scaleUp': 'true',
       },
       {
         'title': 'Total Leaks',
-        'value': corpInfo.leaks?.length.toString() ?? '0',
+        'value': leaks.toString(),
         'iconPath': 'assets/images/svgs/warning_icon.svg',
       },
       {
-        'title': 'Severe Leaks',
-        'value':
-            corpInfo.leaks
-                ?.where((leak) => leak.status == 'Active')
-                .length
-                .toString() ??
-            '0',
+        'title': 'Critical Leaks',
+        'value': criticalLeaks.toString(),
         'iconPath': 'assets/images/svgs/danger_icon.svg',
       },
     ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final CorpModel corpInfo = context.watch<CorpController>().state!;
 
     return SingleChildScrollView(
       child: Padding(
@@ -151,23 +160,35 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(
               height: 135.h,
-              child: ListView.builder(
-                itemCount: overviewDataCards.length,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.only(left: index != 0 ? 20.w : 0),
-                    child: OverviewCard(
-                      cardTitle: overviewDataCards[index]['title']!,
-                      cardValue: overviewDataCards[index]['value']!,
-                      cardIconPath: overviewDataCards[index]['iconPath']!,
-                      scaleUp: overviewDataCards[index]['scaleUp'] == 'true',
-                    ),
+              child: FutureBuilder(
+                future: _overviewCardsData(corpInfo.users, corpInfo.leaks),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  }
+                  final overviewDataCards = snapshot.data!;
+                  return ListView.builder(
+                    itemCount: overviewDataCards.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: EdgeInsets.only(left: index != 0 ? 20.w : 0),
+                        child: OverviewCard(
+                          cardTitle: overviewDataCards[index]['title']!,
+                          cardValue: overviewDataCards[index]['value']!,
+                          cardIconPath: overviewDataCards[index]['iconPath']!,
+                          scaleUp:
+                              overviewDataCards[index]['scaleUp'] == 'true',
+                        ),
+                      );
+                    },
                   );
                 },
               ),
             ),
-            LeaksGraph(leaks: corpInfo.leaks ?? []),
+            // LeaksGraph(leaks: corpInfo.leaks ?? []),
           ],
         ),
       ),

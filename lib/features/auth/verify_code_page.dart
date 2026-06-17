@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:n_leaks/core/constants/app_routes.dart';
-import 'package:n_leaks/core/services/auth_service.dart';
+import 'package:n_leaks/core/services/api_service.dart';
 import 'package:n_leaks/core/widgets/named_text_field.dart';
 import 'package:n_leaks/features/auth/widgets/app_button.dart';
 import 'package:n_leaks/features/auth/widgets/timer_button.dart';
@@ -91,7 +91,7 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
                   ),
                   TimerButton(
                     onPressed: () {
-                      AuthService().sendOTP(email);
+                      APIService().sendOTP(email);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
@@ -116,7 +116,7 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
               AppButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    final verified = await AuthService().verifyOTP(
+                    final verified = await APIService().verifyOTP(
                       email,
                       _codeController.text.trim(),
                     );

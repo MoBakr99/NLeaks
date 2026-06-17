@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:n_leaks/core/controllers/token_controller.dart';
 import 'package:n_leaks/core/services/app_initializer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:n_leaks/core/constants/app_routes.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(create: (context) => CorpController()),
           BlocProvider(create: (context) => TimerController()),
+          BlocProvider(create: (context) => TokenController()),
         ],
         child: MaterialApp(
           title: 'N Leaks',

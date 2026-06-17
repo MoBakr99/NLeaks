@@ -10,9 +10,10 @@ class LeakStatusWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Map<String, List<Color>> statusColors = {
-      'Unverified': [warningColorBack, warningColorFront],
-      'Active': [dangerColorBack, dangerColorFront],
-      'Inactive': [safeColorBack, safeColorFront],
+      'low': [safeColorBack, safeColorFront],
+      'medium': [warningColorBack, warningColorFront],
+      'high': [dangerColorBack, dangerColorFront],
+      'critical': [dangerColorBack, dangerColorFront],
     };
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
