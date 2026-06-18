@@ -31,13 +31,27 @@ class HomeAppBar extends StatelessWidget {
         child: Row(
           spacing: 10.w,
           children: <Widget>[
-            CircleAvatar(
-              radius: 32.r,
-              backgroundImage: AssetImage(
-                context.watch<CorpController>().state!.currentUser.pictureUrl ??
-                    'assets/images/pngs/main_user_photo.png',
+            if (context.watch<CorpController>().state!.currentUser.pictureUrl !=
+                null)
+              CircleAvatar(
+                radius: 32.r,
+                backgroundImage: AssetImage(
+                  context
+                      .watch<CorpController>()
+                      .state!
+                      .currentUser
+                      .pictureUrl!,
+                ),
+              )
+            else
+              SvgPicture.asset(
+                'assets/images/svgs/user_logo.svg',
+                width: 64.w,
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).colorScheme.tertiary,
+                  BlendMode.srcIn,
+                ),
               ),
-            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

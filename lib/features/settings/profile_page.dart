@@ -75,22 +75,20 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: <Widget>[
                       Row(
                         children: <Widget>[
-                          Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Theme.of(context).colorScheme.tertiary,
-                                width: 2.w,
+                          if (user.pictureUrl != null)
+                            CircleAvatar(
+                              radius: 48.r,
+                              backgroundImage: AssetImage(user.pictureUrl!),
+                            )
+                          else
+                            SvgPicture.asset(
+                              'assets/images/svgs/user_logo.svg',
+                              width: 96.w,
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.tertiary,
+                                BlendMode.srcIn,
                               ),
                             ),
-                            child: CircleAvatar(
-                              radius: 47.r,
-                              backgroundImage: AssetImage(
-                                user.pictureUrl ??
-                                    'assets/images/pngs/main_user_photo.png',
-                              ),
-                            ),
-                          ),
                           SizedBox(width: 22.w),
                           Expanded(
                             child: Text(
