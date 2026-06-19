@@ -4,13 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:n_leaks/core/constants/app_routes.dart';
 import 'package:n_leaks/core/controllers/corp_controller.dart';
-import 'package:n_leaks/core/controllers/token_controller.dart';
 import 'package:n_leaks/core/data/models/corp_model.dart';
-import 'package:n_leaks/core/services/api_service.dart';
-// import 'package:n_leaks/features/home/components/leaks_graph.dart';
 import 'package:n_leaks/core/widgets/subscription_card.dart';
 import 'package:n_leaks/features/home/components/notification_button.dart';
-import 'package:n_leaks/features/home/widgets/overview_card.dart';
+import 'package:n_leaks/features/home/components/leaks_dashboard_section.dart';
 
 class HomeAppBar extends StatelessWidget {
   const HomeAppBar({super.key});
@@ -80,37 +77,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<List<Map<String, String>>> _overviewCardsData(
-    int users,
-    int leaks,
-  ) async {
-    final response = await APIService().getLeaks(
-      context.read<TokenController>().state!,
-      limit: 100,
-    );
-    final criticalLeaks = List.from(
-      response.data['data'].where((leak) => leak['severity'] == 'critical'),
-    ).length;
-    return [
-      {
-        'title': 'Total Users',
-        'value': users.toString(),
-        'iconPath': 'assets/images/svgs/users_card_icon.svg',
-        'scaleUp': 'true',
-      },
-      {
-        'title': 'Total Leaks',
-        'value': leaks.toString(),
-        'iconPath': 'assets/images/svgs/warning_icon.svg',
-      },
-      {
-        'title': 'Critical Leaks',
-        'value': criticalLeaks.toString(),
-        'iconPath': 'assets/images/svgs/danger_icon.svg',
-      },
-    ];
-  }
-
   @override
   Widget build(BuildContext context) {
     final CorpModel corpInfo = context.watch<CorpController>().state!;
@@ -166,37 +132,10 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            SizedBox(
-              height: 135.h,
-              child: FutureBuilder(
-                future: _overviewCardsData(corpInfo.users, corpInfo.leaks),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  }
-                  final overviewDataCards = snapshot.data!;
-                  return ListView.builder(
-                    itemCount: overviewDataCards.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.only(left: index != 0 ? 20.w : 0),
-                        child: OverviewCard(
-                          cardTitle: overviewDataCards[index]['title']!,
-                          cardValue: overviewDataCards[index]['value']!,
-                          cardIconPath: overviewDataCards[index]['iconPath']!,
-                          scaleUp:
-                              overviewDataCards[index]['scaleUp'] == 'true',
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
+            LeaksDashboardSection(
+              totalUsers: corpInfo.users,
+              totalLeaks: corpInfo.leaks,
             ),
-            // LeaksGraph(leaks: corpInfo.leaks ?? []),
           ],
         ),
       ),
