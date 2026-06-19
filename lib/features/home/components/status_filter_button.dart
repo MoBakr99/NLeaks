@@ -73,9 +73,9 @@ class _StatusFilterButtonState extends State<StatusFilterButton> {
               .toList()
             ..removeLast(),
       builder: (context, controller, child) => FilterButton(
-        text:  widget.selectedOptions.isEmpty
-            ? 'Status'
-            : 'Status (${widget.selectedOptions.length})',
+        text: widget.selectedOptions.isEmpty
+            ? 'Severity'
+            : 'Severity (${widget.selectedOptions.length})',
         onPressed: () {
           if (controller.isOpen) {
             controller.close();
