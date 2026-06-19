@@ -9,6 +9,7 @@ import 'package:n_leaks/core/data/models/corp_model.dart';
 import 'package:n_leaks/core/services/api_service.dart';
 // import 'package:n_leaks/features/home/components/leaks_graph.dart';
 import 'package:n_leaks/core/widgets/subscription_card.dart';
+import 'package:n_leaks/features/home/components/notification_button.dart';
 import 'package:n_leaks/features/home/widgets/overview_card.dart';
 
 class HomeAppBar extends StatelessWidget {
@@ -66,15 +67,7 @@ class HomeAppBar extends StatelessWidget {
           ],
         ),
       ),
-      actions: [
-        IconButton(
-          onPressed: () {},
-          icon: SvgPicture.asset(
-            'assets/images/svgs/notification_icon.svg',
-            width: 40.w,
-          ),
-        ),
-      ],
+      actions: const [NotificationButton()],
     );
   }
 }
@@ -93,6 +86,7 @@ class _HomePageState extends State<HomePage> {
   ) async {
     final response = await APIService().getLeaks(
       context.read<TokenController>().state!,
+      limit: 100,
     );
     final criticalLeaks = List.from(
       response.data['data'].where((leak) => leak['severity'] == 'critical'),
