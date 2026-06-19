@@ -33,7 +33,7 @@ class _LeaksDashboardSectionState extends State<LeaksDashboardSection> {
   Future<_DashboardSummary> _loadDashboardSummary() async {
     final response = await APIService().getLeaks(
       context.read<TokenController>().state!,
-      limit: 100,
+      limit: 1000,
     );
     return _DashboardSummary.fromResponse(
       rawLeaks: response.data['data'] as List<dynamic>,
@@ -75,9 +75,9 @@ class _LeaksDashboardSectionState extends State<LeaksDashboardSection> {
                         'Critical Leaks',
                       ][index],
                       cardValue: [
-                        summary.totalUsers.toString(),
-                        summary.totalLeaks.toString(),
-                        summary.criticalLeaks.toString(),
+                        summary.totalUsers,
+                        summary.totalLeaks,
+                        summary.criticalLeaks,
                       ][index],
                       cardIconPath: [
                         'assets/images/svgs/users_card_icon.svg',
@@ -91,7 +91,7 @@ class _LeaksDashboardSectionState extends State<LeaksDashboardSection> {
               ),
             ),
             SizedBox(
-              height: 170.h,
+              height: 120.h,
               child: ListView.builder(
                 itemCount: 2,
                 scrollDirection: Axis.horizontal,
@@ -99,16 +99,12 @@ class _LeaksDashboardSectionState extends State<LeaksDashboardSection> {
                   return Padding(
                     padding: EdgeInsets.only(left: index != 0 ? 20.w : 0),
                     child: SizedBox(
-                      width: 220.w,
+                      width: 200.w,
                       child: _MetricTile(
                         title: ['Verified leaks', 'Unverified leaks'][index],
                         value: [
                           summary.verifiedLeaks.toString(),
                           summary.unverifiedLeaks.toString(),
-                        ][index],
-                        subtitle: [
-                          'Confirmed entries in the dataset',
-                          'Still needs validation or triage',
                         ][index],
                         icon: [
                           Icons.verified_outlined,
@@ -121,51 +117,20 @@ class _LeaksDashboardSectionState extends State<LeaksDashboardSection> {
                 },
               ),
             ),
-            // Row(
-            //   children: <Widget>[
-            //     Expanded(
-            //       child: _MetricTile(
-            //         title: 'Verified leaks',
-            //         value: summary.verifiedLeaks.toString(),
-            //         subtitle: 'Confirmed entries in the dataset',
-            //         icon: Icons.verified_outlined,
-            //         accentColor: safeColorFront,
-            //       ),
-            //     ),
-            //     SizedBox(width: 12.w),
-            //     Expanded(
-            //       child: _MetricTile(
-            //         title: 'Unverified leaks',
-            //         value: summary.unverifiedLeaks.toString(),
-            //         subtitle: 'Still needs validation or triage',
-            //         icon: Icons.pending_actions_outlined,
-            //         accentColor: warningColorFront,
-            //       ),
-            //     ),
-            //   ],
-            // ),
             _DashboardCard(
               title: 'Severity breakdown',
-              subtitle:
-                  'Shows how much of the leak inventory is low, medium, high, and critical.',
               child: _SeverityChart(data: summary.leaksBySeverity),
             ),
             _DashboardCard(
               title: 'Top leak sources',
-              subtitle:
-                  'The most frequent source channels in the current sample.',
               child: _SourceBarChart(data: summary.leaksBySource),
             ),
             _DashboardCard(
               title: 'Leak trend by month',
-              subtitle:
-                  'Shows how the leak count changes across the recorded months.',
               child: _MonthlyTrendChart(data: summary.leaksByMonth),
             ),
             _DashboardCard(
               title: 'Verification health',
-              subtitle:
-                  'A quick read on how much of the dataset has been verified.',
               child: _VerificationTrend(
                 verifiedRate: summary.verifiedRate,
                 criticalRate: summary.criticalRate,
@@ -284,14 +249,12 @@ class _MetricTile extends StatelessWidget {
   const _MetricTile({
     required this.title,
     required this.value,
-    required this.subtitle,
     required this.icon,
     required this.accentColor,
   });
 
   final String title;
   final String value;
-  final String subtitle;
   final IconData icon;
   final Color accentColor;
 
@@ -300,41 +263,34 @@ class _MetricTile extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.onSurface,
+        color: Theme.of(context).colorScheme.secondary,
         borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(
-          color: accentColor.withValues(alpha: 0.18),
-          width: 1,
-        ),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Container(
-            width: 48.w,
-            height: 48.w,
-            decoration: BoxDecoration(
-              color: accentColor.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(16.r),
-            ),
-            child: Icon(icon, color: accentColor, size: 24.sp),
-          ),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(title, style: Theme.of(context).textTheme.titleSmall),
-                SizedBox(height: 4.h),
-                Text(
-                  value,
-                  style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+          Text(title, style: Theme.of(context).textTheme.titleSmall),
+          SizedBox(height: 8.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                value,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w700),
+              ),
+              // SizedBox(width: 12.w),
+              Container(
+                width: 48.w,
+                height: 48.w,
+                decoration: BoxDecoration(
+                  color: accentColor.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(16.r),
                 ),
-                SizedBox(height: 3.h),
-                Text(subtitle, style: Theme.of(context).textTheme.labelMedium),
-              ],
-            ),
+                child: Icon(icon, color: accentColor, size: 24.sp),
+              ),
+            ],
           ),
         ],
       ),
@@ -343,14 +299,9 @@ class _MetricTile extends StatelessWidget {
 }
 
 class _DashboardCard extends StatelessWidget {
-  const _DashboardCard({
-    required this.title,
-    required this.subtitle,
-    required this.child,
-  });
+  const _DashboardCard({required this.title, required this.child});
 
   final String title;
-  final String subtitle;
   final Widget child;
 
   @override
@@ -372,8 +323,6 @@ class _DashboardCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(title, style: Theme.of(context).textTheme.titleMedium),
-          SizedBox(height: 4.h),
-          Text(subtitle, style: Theme.of(context).textTheme.labelMedium),
           SizedBox(height: 16.h),
           child,
         ],

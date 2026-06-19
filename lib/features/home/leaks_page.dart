@@ -46,7 +46,7 @@ class _LeaksPageState extends State<LeaksPage> {
   Future<List<LeakModel>?> _fetchLeaks() async {
     final response = await APIService().getLeaks(
       context.read<TokenController>().state!,
-      limit: 100,
+      limit: 1000,
     );
     return List<LeakModel>.from(
       response.data['data'].map(

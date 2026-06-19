@@ -12,7 +12,7 @@ class OverviewCard extends StatelessWidget {
   });
 
   final String cardTitle;
-  final String cardValue;
+  final int cardValue;
   final String cardIconPath;
   final bool scaleUp; // Flag to determine if the icon should be scaled up
 
@@ -36,7 +36,7 @@ class OverviewCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                cardValue,
+                cardValue < 999 ? cardValue.toString() : '999+',
                 style: Theme.of(
                   context,
                 ).textTheme.titleMedium!.copyWith(fontSize: 32.sp),

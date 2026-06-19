@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:n_leaks/core/data/models/leak_model.dart';
 import 'package:n_leaks/features/home/widgets/leak_status_widget.dart';
+import 'package:n_leaks/features/home/widgets/user_info_display.dart';
 
 class LeakDetailsPage extends StatelessWidget {
   const LeakDetailsPage({super.key, required this.leak});
@@ -38,31 +39,20 @@ class LeakDetailsPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(20.w),
+              height: 80.h,
+              padding: EdgeInsets.only(left: 16.w),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.onSurface,
-                borderRadius: BorderRadius.circular(20.r),
+                borderRadius: BorderRadius.circular(15.r),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
                 children: <Widget>[
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Expanded(
-                        child: Text(
-                          leak.name,
-                          style: Theme.of(context).textTheme.displaySmall,
-                        ),
-                      ),
-                      LeakStatusWidget(status: leak.severity),
-                    ],
+                  Expanded(
+                    child: UserInfoDisplay(name: leak.name, email: leak.email),
                   ),
-                  SizedBox(height: 12.h),
-                  Text(
-                    leak.email,
-                    style: Theme.of(context).textTheme.bodyMedium,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: LeakStatusWidget(status: leak.severity),
                   ),
                 ],
               ),
