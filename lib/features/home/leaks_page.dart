@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:n_leaks/core/controllers/token_controller.dart';
 import 'package:n_leaks/core/data/models/leak_model.dart';
 import 'package:n_leaks/core/services/api_service.dart';
+import 'package:n_leaks/features/home/leak_details_page.dart';
 import 'package:n_leaks/features/home/widgets/leak_status_widget.dart';
 import 'package:n_leaks/features/home/components/leaks_filter.dart';
 import 'package:n_leaks/features/home/widgets/user_info_display.dart';
@@ -59,6 +60,7 @@ class _LeaksPageState extends State<LeaksPage> {
               ? DateTime.parse(leak['verifiedAt'])
               : null,
           source: leak['source']['name'],
+          description: leak['source']['description'],
         ),
       ),
     );
@@ -80,7 +82,7 @@ class _LeaksPageState extends State<LeaksPage> {
             dateRange: _selectedDateRange,
             searchController: _searchController,
             onSearchChanged: (value) => setState(() {}),
-            statusOptions: const ['critical', 'high', 'medium', 'low'],
+            statusOptions: const ['low', 'medium', 'high', 'critical'],
             selectedStatuses: _selectedStatuses,
             onStatusSelectionChanged: (values) {
               setState(() {
@@ -168,19 +170,31 @@ class _LeaksPageState extends State<LeaksPage> {
                       color: Theme.of(context).colorScheme.onSurface,
                       borderRadius: BorderRadius.circular(15.r),
                     ),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: UserInfoDisplay(
-                            name: leak.name,
-                            email: leak.email,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(15.r),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => LeakDetailsPage(leak: leak),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: LeakStatusWidget(status: leak.severity),
-                        ),
-                      ],
+                        );
+                      },
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: UserInfoDisplay(
+                              name: leak.name,
+                              email: leak.email,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                            ),
+                            child: LeakStatusWidget(status: leak.severity),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
